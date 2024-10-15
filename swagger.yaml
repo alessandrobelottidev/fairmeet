@@ -1,0 +1,40 @@
+
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: "FairMeet OpenAPI 3.0"
+  description: API for event search.
+  license:
+    name: minchia
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Localhost
+paths:
+  /new-event:
+    post:
+      summary: Create new event
+      responses:
+        "200":
+          description: New event created successfully
+          
+  /event:
+    get:
+      summary: Get event for the search
+      
+      responses:
+        "200":
+          description: A single user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string 
+
