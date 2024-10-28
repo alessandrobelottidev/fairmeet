@@ -1,35 +1,72 @@
 
 openapi: 3.0.0
 info:
+  title: FairMeet OpenAPI
+  description: Questo API server per gestire le richieste di eventi per l'applicazione FairMeet.
   version: '1.0'
-  title: "FairMeet OpenAPI 3.0"
-  description: API for event search.
-  license:
-    name: minchia
+
 servers:
   - url: http://localhost:8000/api/v1
     description: Localhost
 paths:
-  /new-event:
-    post:
-      summary: Create new event
-      responses:
-        "200":
-          description: New event created successfully
-          
   /event:
     get:
-      summary: Get event for the search
       
+      summary: Prendi tutti eventi con filtri
+
       responses:
         "200":
-          description: A single user.
+          description: Eventi trovati.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/Event"
+    post:
+      summary: Crea nuovo evento
+      responses:
+        "200":
+          description: Nuovo evento creato con successo
+          content:
+            application/json:
+              schema:
+                $ref: 
+    delete: 
+
+  /user:
+    get:
+    post: 
+    delete: 
+
+
+  /meeting:   
+    get:
+    post: 
+    delete: 
+
+  
+    
 components:
   schemas:
+    Event: 
+      type: object
+      required:
+        - title
+        - author
+        - date
+        - address
+      properties:
+        title:
+          type: string
+          description: Titolo dell'evento
+        author:
+          type: string
+          description: Ente responsabile dell'evento
+        date: 
+          type: string 
+          description: data dell'evento (giorno e ora)
+        address: 
+          type: string
+          description: indirizzo dell'evento
     User:
       type: object
       properties:
