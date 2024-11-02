@@ -11,9 +11,7 @@ servers:
 paths:
   /event:
     get:
-      
       summary: Prendi tutti eventi con filtri
-
       responses:
         "200":
           description: Eventi trovati.
@@ -24,24 +22,45 @@ paths:
     post:
       summary: Crea nuovo evento
       responses:
-        "200":
+        "201":
           description: Nuovo evento creato con successo
-          content:
-            application/json:
-              schema:
-                $ref: 
+          
     delete: 
+      summary: Elimina evento esistente
+      responses:
+        "204":
+          description: Evento eliminato con successo
 
-  /user:
+  /user{User_id}:
     get:
-    post: 
-    delete: 
+      summary: Cerca utente tramite User_id
+      responses:
+        "200":
+          description: utente trovato con successo
+
+    delete:
+      summary: Elimina utente tramite User_id
+      responses:
+        "204":
+          description: utente eliminato con successo
 
 
   /meeting:   
     get:
-    post: 
+      summary: Invia notifica dei gruppi
+      responses:
+        "200": 
+          description: notifica inviata con successo
+    post:
+      summary: Creazione nuovo gruppo
+      responses:
+        "201":
+          description: gruppo creato con successo
     delete: 
+      summary: Elimina gruppo
+      responses:
+        "204":
+          description: gruppo eliminato con successo
 
   
     
@@ -49,24 +68,11 @@ components:
   schemas:
     Event: 
       type: object
-      required:
-        - title
-        - author
-        - date
-        - address
       properties:
+        id:
+          type: integer
         title:
           type: string
-          description: Titolo dell'evento
-        author:
-          type: string
-          description: Ente responsabile dell'evento
-        date: 
-          type: string 
-          description: data dell'evento (giorno e ora)
-        address: 
-          type: string
-          description: indirizzo dell'evento
     User:
       type: object
       properties:
