@@ -1,4 +1,5 @@
 import express from "express";
+import events from "./events.js";
 
 const app = express();
 
@@ -8,5 +9,7 @@ app.get("/healthcheck", (_, res) => {
     Connections: app.locals,
   });
 });
+
+app.use("/events", events);
 
 export default app;
