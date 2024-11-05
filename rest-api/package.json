@@ -4,9 +4,8 @@
   "description": "REST API service for Fairmeet backend",
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "start": "node --experimental-specifier-resolution=node dist/index.js",
-    "dev": "nodemon",
+    "format": "prettier --write .",
+    "check-format": "prettier --check .",
     "clean": "rimraf dist"
   },
   "author": "",
@@ -15,15 +14,19 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "mongoose": "^8.8.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8",
     "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
-    "nodemon": "^3.1.7",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.7",
+    "prettier": "^3.3.3",
     "rimraf": "^5.0.5",
-    "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   }
 }

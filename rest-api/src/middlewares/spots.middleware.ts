@@ -1,5 +1,5 @@
-import e from "express";
-import { spotValidationSchema } from "@validators/spot.validator";
+import { spotValidationSchema } from '@validators/spot.validator';
+import e from 'express';
 
 export const validateSpot: e.RequestHandler = async (req, res, next) => {
   try {

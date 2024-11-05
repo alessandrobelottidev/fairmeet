@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export default mongoose.model(
-  "event",
+  'event',
   new mongoose.Schema({
     title: String,
     address: String,
@@ -11,5 +11,5 @@ export default mongoose.model(
     endDateTimeZ: String,
     description: String,
     updated_at: { type: Date, default: Date.now },
-  })
+  }),
 );

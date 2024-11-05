@@ -1,17 +1,17 @@
 {
   "rest-client.environmentVariables": {
-      // "$shared": {
-      //     "authToken": "YOUR_TOKEN"
-      // },
-      "local": {
-        "baseUrl": "http://localhost:3000",
-        "version": "v1"
-      },
-      "staging": {
-        "baseUrl": "http://localhost:3001/v1"
-      },
-      "production": {
-        "baseUrl": "http://api.fairmeet.com/v1"
-      }
+    // "$shared": {
+    //     "authToken": "YOUR_TOKEN"
+    // },
+    "local": {
+      "baseUrl": "http://localhost:3000",
+      "version": "v1"
+    },
+    "staging": {
+      "baseUrl": "http://localhost:3001/v1"
+    },
+    "production": {
+      "baseUrl": "http://api.fairmeet.com/v1"
+    }
   }
 }

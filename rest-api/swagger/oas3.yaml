@@ -1,4 +1,3 @@
-
 openapi: 3.0.0
 info:
   title: FairMeet OpenAPI
@@ -13,60 +12,57 @@ paths:
     get:
       summary: Prendi tutti eventi con filtri
       responses:
-        "200":
+        '200':
           description: Eventi trovati.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Event"
+                $ref: '#/components/schemas/Event'
     post:
       summary: Crea nuovo evento
       responses:
-        "201":
+        '201':
           description: Nuovo evento creato con successo
-          
-    delete: 
+
+    delete:
       summary: Elimina evento esistente
       responses:
-        "204":
+        '204':
           description: Evento eliminato con successo
 
   /user{User_id}:
     get:
       summary: Cerca utente tramite User_id
       responses:
-        "200":
+        '200':
           description: utente trovato con successo
 
     delete:
       summary: Elimina utente tramite User_id
       responses:
-        "204":
+        '204':
           description: utente eliminato con successo
 
-
-  /meeting:   
+  /meeting:
     get:
       summary: Invia notifica dei gruppi
       responses:
-        "200": 
+        '200':
           description: notifica inviata con successo
     post:
       summary: Creazione nuovo gruppo
       responses:
-        "201":
+        '201':
           description: gruppo creato con successo
-    delete: 
+    delete:
       summary: Elimina gruppo
       responses:
-        "204":
+        '204':
           description: gruppo eliminato con successo
 
-  
-    
 components:
   schemas:
-    Event: 
+    Event:
       type: object
       properties:
         id:
@@ -79,5 +75,4 @@ components:
         id:
           type: integer
         name:
-          type: string 
-
+          type: string

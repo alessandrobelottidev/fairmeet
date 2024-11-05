@@ -4,7 +4,7 @@ export interface IReqError {
 }
 
 export const ServerError = {
-  message: "Errore del server, riprova piu tardi...",
+  message: 'Errore del server, riprova piu tardi...',
 } as IReqError;
 
 export const NotFoundError = {
@@ -12,25 +12,19 @@ export const NotFoundError = {
 } as IReqError;
 
 export const UnauthorizedError = {
-  message: "Non sei autorizzato a eseguire questa azione.",
+  message: 'Non sei autorizzato a eseguire questa azione.',
 } as IReqError;
 
 export const InvalidPayloadError = {
   message: "La tua richiesta non e' valida, i parametri sono errati.",
 } as IReqError;
 
-export const createCustomError = (
-  message: string,
-  details?: string
-): IReqError => ({
+export const createCustomError = (message: string, details?: string): IReqError => ({
   message,
   details,
 });
 
-export const createErrorWithDetails = (
-  error: IReqError,
-  details: string
-): IReqError => ({
+export const createErrorWithDetails = (error: IReqError, details: string): IReqError => ({
   message: error.message,
   details,
 });

@@ -1,7 +1,7 @@
-import Spot from "@models/spot";
-import { NotFoundError } from "@/errors";
-import { RequestHandler } from "express";
-import { SpotDTO } from "@interfaces/spot.interface";
+import { NotFoundError } from '@/errors';
+import { SpotDTO } from '@interfaces/spot.interface';
+import Spot from '@models/spot';
+import { RequestHandler } from 'express';
 
 export const getSpots: RequestHandler = async (_, res) => {
   const spots = await Spot.find();
@@ -24,14 +24,12 @@ export const getSpotById: RequestHandler = async (req, res) => {
   // Check that the query "fields" in an array
   if (Array.isArray(req.query.fields)) {
     // Filter out fields that do not belong to the ISpot interface
-    fields = (req.query.fields as string[]).filter(
-      (field): field is keyof SpotDTO => {
-        return field in Spot.schema.paths;
-      }
-    );
+    fields = (req.query.fields as string[]).filter((field): field is keyof SpotDTO => {
+      return field in Spot.schema.paths;
+    });
   }
 
-  const spot = await Spot.findById(req.params.id, fields.join(" "));
+  const spot = await Spot.findById(req.params.id, fields.join(' '));
 
   if (!spot) {
     res.status(404).json(NotFoundError).end();
