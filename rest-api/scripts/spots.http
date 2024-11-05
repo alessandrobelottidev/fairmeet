@@ -12,16 +12,32 @@ Content-Type: application/json
 ###
 
 # GET request to fetch only certain fields of single spot based on its id
-GET {{baseUrl}}/{{version}}/spots/6729f53f886e570c85aeee62?field[]=title&field[]=description
+GET {{baseUrl}}/{{version}}/spots/6729f53f886e570c85aeee62?fields[]=title&fields[]=description
 Content-Type: application/json
 
 ###
 
 # GET request to fetch only certain fields of single spot based on its id but the field is missing
-GET {{baseUrl}}/{{version}}/spots/6729f4c5954595eac019435d?field[]=socialMediaHandles
+GET {{baseUrl}}/{{version}}/spots/6729f4c5954595eac019435d?fields[]=socialMediaHandles
+Content-Type: application/json
+
+
+###
+
+# GET request to fetch a single spot that doesnt exist
+GET {{baseUrl}}/{{version}}/spots/6729f4c5954595eac019435e?fields[]=socialMediaHandles
 Content-Type: application/json
 
 ###
+
+###
+
+# GET request to fetch a single spot with a id that is invalid
+GET {{baseUrl}}/{{version}}/spots/6729f4c5954595eac019435e?fields[]=socialMediaHandles
+Content-Type: application/json
+
+###
+
 
 # POST request to create new data with all fields
 POST {{baseUrl}}/{{version}}/spots

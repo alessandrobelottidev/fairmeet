@@ -1,5 +1,5 @@
 import e from "express";
-import event from "../models/event";
+import event from "@models/event";
 const router = e.Router();
 
 router.route("/").get(async (req, res) => {

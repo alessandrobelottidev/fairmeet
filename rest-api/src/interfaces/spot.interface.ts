@@ -1,4 +1,4 @@
-export interface ISpot {
+export interface SpotDTO {
   title: string;
   address: string;
   description: string;
@@ -6,7 +6,7 @@ export interface ISpot {
   longitude: number;
   abstract?: string;
   email?: string;
-  socialMediaHandles?: Map<string, string>;
+  socialMediaHandles?: Record<string, string>;
   featuredImageUrl?: string;
   updated_at?: Date;
 }
@@ -14,7 +14,7 @@ export interface ISpot {
 // Create an interface that extends both ISpot and Document
 // so that the instances of this interface will know which
 // parameters are available.
-export interface ISpotDocument extends ISpot, Document {
+export interface SpotDocument extends SpotDTO, Document {
   // You can add additional methods here if needed
   // For example: getFullAddress(): string;
 }

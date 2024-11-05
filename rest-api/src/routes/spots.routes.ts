@@ -1,6 +1,6 @@
 import e from "express";
-import controller from "./spots.controller";
-import { validateSpot } from "./spots.middleware";
+import controller from "@controllers/spots.controller";
+import { validateSpot } from "@middlewares/spots.middleware";
 
 const router = e.Router();
 

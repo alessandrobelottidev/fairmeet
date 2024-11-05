@@ -2,7 +2,7 @@ import { z } from "zod";
 import { socialMediaHandlesSchema } from "./socialMediaHandlesSchema";
 
 // Main Zod schema that mirrors the ISpot interface
-export const spotSchema = z.object({
+export const spotValidationSchema = z.object({
   title: z
     .string()
     .min(3, "Title must be at least 3 characters")
@@ -41,4 +41,4 @@ export const spotSchema = z.object({
 });
 
 // Type inference from the Zod schema
-export type SpotSchemaType = z.infer<typeof spotSchema>;
+export type SpotSchemaType = z.infer<typeof spotValidationSchema>;

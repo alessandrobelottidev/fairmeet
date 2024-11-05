@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import app from "./routes/app";
+import app from "@routes/app";
 
 dotenv.config();
 
