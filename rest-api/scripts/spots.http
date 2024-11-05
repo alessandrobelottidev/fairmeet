@@ -4,6 +4,25 @@ Content-Type: application/json
 
 ###
 
+# GET request to fetch a single spot based on its id
+GET {{baseUrl}}/{{version}}/spots/6729f53f886e570c85aeee62
+Content-Type: application/json
+
+
+###
+
+# GET request to fetch only certain fields of single spot based on its id
+GET {{baseUrl}}/{{version}}/spots/6729f53f886e570c85aeee62?field[]=title&field[]=description
+Content-Type: application/json
+
+###
+
+# GET request to fetch only certain fields of single spot based on its id but the field is missing
+GET {{baseUrl}}/{{version}}/spots/6729f4c5954595eac019435d?field[]=socialMediaHandles
+Content-Type: application/json
+
+###
+
 # POST request to create new data with all fields
 POST {{baseUrl}}/{{version}}/spots
 Content-Type: application/json
@@ -46,19 +65,3 @@ Content-Type: application/json
 {
     "title": "New Item 3"
 }
-
-###
-
-# PUT request to update data
-PUT http://localhost:3000/api/v1/resource/1
-Content-Type: application/json
-
-{
-    "name": "Updated Item",
-    "description": "Updated description."
-}
-
-###
-
-# DELETE request to delete data
-DELETE http://localhost:3000/api/v1/resource/1

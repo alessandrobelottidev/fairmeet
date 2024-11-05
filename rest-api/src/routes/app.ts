@@ -1,6 +1,6 @@
 import express from "express";
 import events from "./events";
-import spots from "./spots/spots";
+import spots from "./spots/spots.routes";
 
 const app = express();
 
