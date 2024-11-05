@@ -1,0 +1,29 @@
+# GET request to fetch data
+GET http://localhost:3000/healthcheck
+
+###
+
+# POST request to create new data
+POST http://localhost:3000/api/v1/resource
+Content-Type: application/json
+
+{
+    "name": "Sample Item",
+    "description": "This is a sample description."
+}
+
+###
+
+# PUT request to update data
+PUT http://localhost:3000/api/v1/resource/1
+Content-Type: application/json
+
+{
+    "name": "Updated Item",
+    "description": "Updated description."
+}
+
+###
+
+# DELETE request to delete data
+DELETE http://localhost:3000/api/v1/resource/1

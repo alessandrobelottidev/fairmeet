@@ -1,0 +1,13 @@
+{
+  "rest-client.environmentVariables": {
+      // "$shared": {
+      //     "authToken": "YOUR_TOKEN"
+      // },
+      "local": {
+          "host": "http://localhost:3000"
+      },
+      // "production": {
+      //     "host": "https://api.fairmeet.com"
+      // }
+  }
+}
