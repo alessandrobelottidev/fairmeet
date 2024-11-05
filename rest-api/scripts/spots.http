@@ -1,0 +1,64 @@
+# GET request to fetch data
+GET {{baseUrl}}/{{version}}/spots
+Content-Type: application/json
+
+###
+
+# POST request to create new data with all fields
+POST {{baseUrl}}/{{version}}/spots
+Content-Type: application/json
+
+{
+    "title": "New Item",
+    "address": "New Address",
+    "abstract": "New Abstract",
+    "description": "New Description",
+    "latitude": 1,
+    "longitude": 1,
+    "email": "test1234@test.com",
+    "socialMediaHandles": {
+        "twitter": "https://twitter.com",
+        "facebook": "https://facebook.com"
+    },
+    "featuredImageUrl": "https://www.google.com"
+}
+
+###
+
+# POST request to create new data with only required fields
+POST {{baseUrl}}/{{version}}/spots
+Content-Type: application/json
+
+{
+    "title": "New Item 2",
+    "address": "New Address",
+    "description": "New Description",
+    "latitude": 1,
+    "longitude": 1
+}
+
+###
+
+# POST request to create new data (it should fail since there are no required fields)
+POST {{baseUrl}}/{{version}}/spots
+Content-Type: application/json
+
+{
+    "title": "New Item 3"
+}
+
+###
+
+# PUT request to update data
+PUT http://localhost:3000/api/v1/resource/1
+Content-Type: application/json
+
+{
+    "name": "Updated Item",
+    "description": "Updated description."
+}
+
+###
+
+# DELETE request to delete data
+DELETE http://localhost:3000/api/v1/resource/1
