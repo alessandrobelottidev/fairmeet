@@ -6,7 +6,8 @@ const app = express();
 app.get("/healthcheck", (_, res) => {
   res.send({
     Status: "Running healthy",
-    Connections: app.locals,
+    DateTime: Date.now(),
+    AppLocals: app.locals,
   });
 });
 
