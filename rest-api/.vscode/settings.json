@@ -4,10 +4,14 @@
       //     "authToken": "YOUR_TOKEN"
       // },
       "local": {
-          "host": "http://localhost:3000"
+        "baseUrl": "http://localhost:3000",
+        "version": "v1"
       },
-      // "production": {
-      //     "host": "https://api.fairmeet.com"
-      // }
+      "staging": {
+        "baseUrl": "http://localhost:3001/v1"
+      },
+      "production": {
+        "baseUrl": "http://api.fairmeet.com/v1"
+      }
   }
 }

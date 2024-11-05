@@ -1,7 +1,10 @@
 import express from "express";
 import events from "./events";
+import spots from "./spots";
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/healthcheck", (_, res) => {
   res.send({
@@ -11,6 +14,7 @@ app.get("/healthcheck", (_, res) => {
   });
 });
 
-app.use("/events", events);
+app.use("/v1/events", events);
+app.use("/v1/spots", spots);
 
 export default app;
