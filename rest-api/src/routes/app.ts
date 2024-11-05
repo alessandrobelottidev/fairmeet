@@ -1,5 +1,5 @@
 import express from "express";
-import events from "./events.js";
+import events from "./events";
 
 const app = express();
 
