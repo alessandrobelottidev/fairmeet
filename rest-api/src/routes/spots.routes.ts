@@ -11,98 +11,145 @@ const router = e.Router();
  *     tags:
  *       - Spots
  *     summary: Get all spots
- *     description: Retrieve a list of all spots from the database
+ *     description: Retrieve a paginated list of all spots, with options for sorting and selecting specific fields.
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 0
+ *         description: The page number for pagination (starting from 0).
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *           maximum: 100
+ *         description: Maximum number of items per page.
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           default: "updated_at"
+ *         description: Field by which to sort results.
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: "desc"
+ *         description: Order of sorting, either ascending (asc) or descending (desc).
+ *       - in: query
+ *         name: fields
+ *         schema:
+ *           type: string
+ *         description: Comma-separated list of fields to retrieve (e.g., "title,address").
  *     responses:
  *       200:
- *         description: A list of spots
+ *         description: A paginated list of spots.
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: The spot ID
- *                   title:
- *                     type: string
- *                     description: The spot title
- *                   address:
- *                     type: string
- *                     description: The spot address
- *                   description:
- *                     type: string
- *                     description: Detailed description of the spot
- *                   latitude:
- *                     type: number
- *                     description: Geographical latitude
- *                   longitude:
- *                     type: number
- *                     description: Geographical longitude
- *                   abstract:
- *                     type: string
- *                     description: Brief description of the spot
- *                   email:
- *                     type: string
- *                     description: Contact email for the spot
- *                   socialMediaHandles:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
  *                     type: object
- *                     description: Social media handles associated with the spot
- *                   featuredImageUrl:
- *                     type: string
- *                     description: URL of the featured image
- *                   updated_at:
- *                     type: string
- *                     format: date-time
- *                     description: Last update timestamp
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: The spot ID.
+ *                       title:
+ *                         type: string
+ *                         description: Title of the spot.
+ *                       address:
+ *                         type: string
+ *                         description: Address of the spot.
+ *                       latitude:
+ *                         type: number
+ *                         description: Latitude of the spot.
+ *                       longitude:
+ *                         type: number
+ *                         description: Longitude of the spot.
+ *                       updated_at:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Last update timestamp.
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     totalDocs:
+ *                       type: integer
+ *                     totalPages:
+ *                       type: integer
+ *                     currentPage:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     hasNextPage:
+ *                       type: boolean
+ *                     hasPrevPage:
+ *                       type: boolean
+ *                     nextPage:
+ *                       type: integer
+ *                       nullable: true
+ *                     prevPage:
+ *                       type: integer
+ *                       nullable: true
  *       500:
- *         description: Internal server error
+ *         description: Internal server error.
  *   post:
  *     tags:
  *       - Spots
  *     summary: Create a new spot
- *     description: Add a new spot to the database
+ *     description: Add a new spot to the database with detailed information.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - title
- *               - address
- *               - latitude
- *               - longitude
  *             properties:
  *               title:
  *                 type: string
- *                 description: The spot title
+ *                 description: The spot title.
+ *                 example: "Sunny Beach"
  *               address:
  *                 type: string
- *                 description: The spot address
+ *                 description: The spot address.
+ *                 example: "456 Ocean Drive, Beachtown"
  *               description:
  *                 type: string
- *                 description: Detailed description of the spot
+ *                 description: Detailed description of the spot.
+ *                 example: "A popular beach with clear water and white sand."
  *               latitude:
  *                 type: number
- *                 description: Geographical latitude
+ *                 description: Geographical latitude.
+ *                 example: 36.778259
  *               longitude:
  *                 type: number
- *                 description: Geographical longitude
+ *                 description: Geographical longitude.
+ *                 example: -119.417931
  *               abstract:
  *                 type: string
- *                 description: Brief description of the spot
+ *                 description: Brief description of the spot.
+ *                 example: "Scenic beach."
  *               email:
  *                 type: string
  *                 format: email
- *                 description: Contact email for the spot
+ *                 description: Contact email for the spot.
+ *                 example: "info@sunnybeach.com"
  *               socialMediaHandles:
  *                 type: object
- *                 description: Social media handles associated with the spot
+ *                 description: Social media handles associated with the spot.
+ *                 additionalProperties:
+ *                   type: string
+ *                 example: { "facebook": "facebook.com/sunnybeach", "instagram": "instagram.com/sunnybeach" }
  *               featuredImageUrl:
  *                 type: string
- *                 description: URL of the featured image
+ *                 description: URL of the featured image.
+ *                 example: "https://example.com/images/sunnybeach.jpg"
  *     responses:
  *       201:
  *         description: Spot created successfully
@@ -113,15 +160,56 @@ const router = e.Router();
  *               properties:
  *                 _id:
  *                   type: string
- *                   description: The created spot ID
+ *                   description: Unique identifier of the created spot.
+ *                   example: "609e128c81d3e2b1c4f43c56"
  *                 title:
  *                   type: string
- *                   description: The spot title
- *                 # ... (same properties as above)
+ *                   description: The spot title.
+ *                   example: "Sunny Beach"
+ *                 address:
+ *                   type: string
+ *                   description: The spot address.
+ *                   example: "456 Ocean Drive, Beachtown"
+ *                 description:
+ *                   type: string
+ *                   description: Detailed description of the spot.
+ *                   example: "A popular beach with clear water and white sand."
+ *                 latitude:
+ *                   type: number
+ *                   description: Geographical latitude.
+ *                   example: 36.778259
+ *                 longitude:
+ *                   type: number
+ *                   description: Geographical longitude.
+ *                   example: -119.417931
+ *                 abstract:
+ *                   type: string
+ *                   description: Brief description of the spot.
+ *                   example: "Scenic beach."
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                   description: Contact email for the spot.
+ *                   example: "info@sunnybeach.com"
+ *                 socialMediaHandles:
+ *                   type: object
+ *                   description: Social media handles associated with the spot.
+ *                   additionalProperties:
+ *                     type: string
+ *                   example: { "facebook": "facebook.com/sunnybeach", "instagram": "instagram.com/sunnybeach" }
+ *                 featuredImageUrl:
+ *                   type: string
+ *                   description: URL of the featured image.
+ *                   example: "https://example.com/images/sunnybeach.jpg"
+ *                 updated_at:
+ *                   type: string
+ *                   format: date-time
+ *                   description: Timestamp when the spot was last updated.
+ *                   example: "2023-10-12T07:20:50.52Z"
  *       400:
- *         description: Invalid request body
+ *         description: Invalid request body.
  *       500:
- *         description: Internal server error
+ *         description: Internal server error.
  */
 router.route('/').get(controller.getSpots).post(validateSpot, controller.createSpot);
 
@@ -130,23 +218,80 @@ router.route('/').get(controller.getSpots).post(validateSpot, controller.createS
  * /v1/spots/{id}:
  *   get:
  *     tags:
- *      - Spots
- *     summary: Get spot by ID.
- *     description: Get spot by ID.
+ *       - Spots
+ *     summary: Get spot by ID
+ *     description: Retrieve details of a specific spot by its ID, with an option to select specific fields.
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: Spot _id
+ *         description: Unique identifier for the spot.
+ *       - in: query
+ *         name: fields
+ *         schema:
+ *           type: string
+ *         description: Comma-separated list of fields to retrieve (e.g., "title,address").
+ *         example: "title,address,latitude,longitude"
  *     responses:
- *       '200':
- *         description: A successful response
- *       '404':
- *         description: Spot not found
- *       '500':
- *         description: Internal server error
+ *       200:
+ *         description: Detailed information of the spot.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: Unique identifier of the spot.
+ *                 title:
+ *                   type: string
+ *                   description: Title of the spot.
+ *                   example: "Beautiful Park"
+ *                 address:
+ *                   type: string
+ *                   description: Address of the spot.
+ *                   example: "123 Park Ave, Cityville"
+ *                 description:
+ *                   type: string
+ *                   description: Full description of the spot.
+ *                   example: "A scenic park with lots of greenery and walking paths."
+ *                 latitude:
+ *                   type: number
+ *                   description: Latitude of the spot.
+ *                   example: 34.052235
+ *                 longitude:
+ *                   type: number
+ *                   description: Longitude of the spot.
+ *                   example: -118.243683
+ *                 abstract:
+ *                   type: string
+ *                   description: Brief description of the spot.
+ *                   example: "A beautiful city park."
+ *                 email:
+ *                   type: string
+ *                   description: Contact email for inquiries.
+ *                   example: "contact@beautifulpark.com"
+ *                 socialMediaHandles:
+ *                   type: object
+ *                   additionalProperties:
+ *                     type: string
+ *                   description: Social media handles.
+ *                   example: { "facebook": "facebook.com/beautifulpark", "instagram": "instagram.com/beautifulpark" }
+ *                 featuredImageUrl:
+ *                   type: string
+ *                   description: URL for the spot's featured image.
+ *                   example: "https://example.com/images/park.jpg"
+ *                 updated_at:
+ *                   type: string
+ *                   format: date-time
+ *                   description: Last updated timestamp.
+ *                   example: "2023-10-12T07:20:50.52Z"
+ *       404:
+ *         description: Spot not found.
+ *       500:
+ *         description: Internal server error.
  */
 router.route('/:id').get(controller.getSpotById);
 
