@@ -1,19 +1,23 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 export default {
   swaggerDefinition: {
     openapi: '3.0.0',
     info: {
-      title: 'Employee API',
-      description: 'Employee API Information',
+      title: 'Fairmeet API',
+      description: 'All the data needed to power the frontend',
       version: '1.0.0',
       contact: {
-        name: 'Sagi Weizmann',
+        name: 'Marco Adami, Alessandro Belotti, Michela Stopato',
       },
     },
     servers: [
       {
-        url: `http://localhost:${process.env.REST_API_PORT}/${process.env.REST_API_PORT}`,
+        url: `http://localhost:${process.env.REST_API_PORT}`,
       },
     ],
   },
-  apis: ['./src/api/routes/v1/*.js'],
+  apis: ['./src/routes/*.ts'],
 };
