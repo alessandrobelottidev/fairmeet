@@ -295,7 +295,126 @@ router.route('/').get(controller.getSpots).post(validateSpotSchema, controller.c
  */
 router.route('/:id').get(controller.getSpotById);
 
+/**
+ * @swagger
+ * /v1/spots/{id}:
+ *   patch:
+ *     tags:
+ *       - Spots
+ *     summary: Update a specific spot by ID
+ *     description: Modify one or more fields of a specific spot.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the spot to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Updated title of the spot.
+ *                 example: "Updated Sunny Beach"
+ *               address:
+ *                 type: string
+ *                 description: Updated address of the spot.
+ *                 example: "789 New Ocean Drive, Beachtown"
+ *               description:
+ *                 type: string
+ *                 description: Updated detailed description of the spot.
+ *               latitude:
+ *                 type: number
+ *                 description: Updated geographical latitude.
+ *               longitude:
+ *                 type: number
+ *                 description: Updated geographical longitude.
+ *               abstract:
+ *                 type: string
+ *                 description: Updated brief description of the spot.
+ *     responses:
+ *       200:
+ *         description: Successfully updated spot
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: ID of the updated spot.
+ *                 title:
+ *                   type: string
+ *                 address:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 latitude:
+ *                   type: number
+ *                 longitude:
+ *                   type: number
+ *                 abstract:
+ *                   type: string
+ *                 updated_at:
+ *                   type: string
+ *                   format: date-time
+ *                   description: Last update timestamp.
+ *       404:
+ *         description: Spot not found
+ *       400:
+ *         description: Bad request or validation error
+ *       500:
+ *         description: Internal server error
+ */
 router.route('/:id').patch(controller.patchSpotByID);
 
+/**
+ * @swagger
+ * /v1/spots/{id}:
+ *   delete:
+ *     tags:
+ *       - Spots
+ *     summary: Delete a spot by ID
+ *     description: Remove a specific spot from the database by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the spot to delete.
+ *     responses:
+ *       200:
+ *         description: Successfully deleted the spot
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: ID of the deleted spot.
+ *                 title:
+ *                   type: string
+ *                 address:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 latitude:
+ *                   type: number
+ *                 longitude:
+ *                   type: number
+ *                 abstract:
+ *                   type: string
+ *       404:
+ *         description: Spot not found
+ *       500:
+ *         description: Internal server error
+ */
 router.route('/:id').delete(controller.deleteSpotByID);
 export default router;

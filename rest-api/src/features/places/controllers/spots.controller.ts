@@ -113,6 +113,7 @@ export const patchSpotByID: RequestHandler = async (req, res, next) => {
   //see the possible options like runValidators
   const spot = await Spot.findByIdAndUpdate(req.params.id, update_fields, {
     runValidators: true,
+    returnDocument: 'after',
   });
 
   res.status(200).json(spot);
