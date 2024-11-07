@@ -1,5 +1,6 @@
 import { CustomError } from '@core/errors/custom.error';
 import { PaginatedResponse, PaginationQuery } from '@core/interfaces/pagination.interface';
+import { catchAsync } from '@core/utils/catchAsync';
 import Spot from '@features/places/models/spot';
 import { ISpot } from '@features/places/spot.interface';
 import { RequestHandler } from 'express';
@@ -131,9 +132,9 @@ export const deleteSpotByID: RequestHandler = async (req, res, next) => {
 };
 
 export default {
-  getSpots,
-  createSpot,
-  getSpotById,
-  patchSpotByID,
-  deleteSpotByID,
+  getSpots: catchAsync(getSpots),
+  createSpot: catchAsync(createSpot),
+  getSpotById: catchAsync(getSpotById),
+  patchSpotByID: catchAsync(patchSpotByID),
+  deleteSpotByID: catchAsync(deleteSpotByID),
 };
