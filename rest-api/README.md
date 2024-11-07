@@ -11,6 +11,7 @@ Run this program in local development mode:
 ```bash
 cp .env.example .env
 nano .env
+npm install
 npm run build
 npm run start
 ```
