@@ -1,6 +1,6 @@
 import { CustomError } from '@errors/custom.error';
 import { PaginatedResponse, PaginationQuery } from '@interfaces/pagination.interface';
-import { SpotDTO } from '@interfaces/spot.interface';
+import { ISpot } from '@interfaces/spot.interface';
 import Spot from '@models/spot';
 import { RequestHandler } from 'express';
 
@@ -23,7 +23,7 @@ export const getSpots: RequestHandler = async (req, res, next) => {
     // Parse and validate requested fields
     let selectedFields: string[] = [];
     if (fields) {
-      selectedFields = fields.split(',').filter((field): field is keyof SpotDTO => {
+      selectedFields = fields.split(',').filter((field): field is keyof ISpot => {
         return field in Spot.schema.paths;
       });
     }
@@ -93,7 +93,7 @@ export const getSpotById: RequestHandler = async (req, res, next) => {
   // Parse and validate requested fields
   let selectedFields: string[] = [];
   if (fields) {
-    selectedFields = fields.split(',').filter((field): field is keyof SpotDTO => {
+    selectedFields = fields.split(',').filter((field): field is keyof ISpot => {
       return field in Spot.schema.paths;
     });
   }

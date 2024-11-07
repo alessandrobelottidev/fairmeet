@@ -1,7 +1,7 @@
-import { SpotDocument } from '@interfaces/spot.interface';
+import { ISpotDocument } from '@interfaces/spot.interface';
 import mongoose from 'mongoose';
 
-const spotSchema = new mongoose.Schema<SpotDocument>({
+const spotSchema = new mongoose.Schema<ISpotDocument>({
   title: {
     type: String,
     required: [true, 'Title is required'],
@@ -71,4 +71,4 @@ spotSchema.pre('save', function (next) {
   next();
 });
 
-export default mongoose.model<SpotDocument>('spot', spotSchema);
+export default mongoose.model<ISpotDocument>('spot', spotSchema);

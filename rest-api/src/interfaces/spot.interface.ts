@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-export interface SpotDTO {
+export interface ISpot {
   title: string;
   address: string;
   description: string;
@@ -13,4 +13,4 @@ export interface SpotDTO {
   updated_at?: Date;
 }
 
-export interface SpotDocument extends SpotDTO, Document {}
+export interface ISpotDocument extends ISpot, Document {}
