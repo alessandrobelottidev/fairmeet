@@ -1,5 +1,5 @@
 import controller from '@controllers/spots.controller';
-import { validateSpot } from '@middlewares/spots.middleware';
+import { validateSpotSchema } from '@middlewares/spots.middleware';
 import e from 'express';
 
 const router = e.Router();
@@ -211,7 +211,7 @@ const router = e.Router();
  *       500:
  *         description: Internal server error.
  */
-router.route('/').get(controller.getSpots).post(validateSpot, controller.createSpot);
+router.route('/').get(controller.getSpots).post(validateSpotSchema, controller.createSpot);
 
 /**
  * @swagger

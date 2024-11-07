@@ -1,7 +1,9 @@
-import swaggerOptions from '@/swagger.options';
-import { errorHandler } from '@middlewares/errors';
+import { globalErrorHandler, notFoundErrorHandler } from '@middlewares/core/errors';
+import swaggerOptions from '@options/swagger.options';
+import auth from '@routes/auth.routes';
 import events from '@routes/events';
 import spots from '@routes/spots.routes';
+import cookies from 'cookie-parser';
 import express from 'express';
 import swaggerjsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -10,6 +12,7 @@ const app = express();
 const swaggerDocs = swaggerjsdoc(swaggerOptions);
 
 app.use(express.json());
+app.use(cookies());
 
 app.get('/healthcheck', (_, res) => {
   res.send({
@@ -21,10 +24,24 @@ app.get('/healthcheck', (_, res) => {
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:            # arbitrary name for the security scheme
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT    # optional, arbitrary value for documentation
+ */
+app.use('/v1/auth', auth);
+
 app.use('/v1/events', events);
 app.use('/v1/spots', spots);
 
+// Handle unregistered route for all HTTP Methods
+app.all('*', notFoundErrorHandler);
+
 // Centralized error-handling middleware
-app.use(errorHandler);
+app.use(globalErrorHandler);
 
 export default app;

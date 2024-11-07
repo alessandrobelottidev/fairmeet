@@ -1,12 +1,12 @@
-import { NotFoundError } from '@/errors';
-import { PaginatedResponse, PaginationQuery } from '@/interfaces/pagination.interface';
+import { CustomError } from '@errors/custom.error';
+import { PaginatedResponse, PaginationQuery } from '@interfaces/pagination.interface';
 import { SpotDTO } from '@interfaces/spot.interface';
 import Spot from '@models/spot';
 import { RequestHandler } from 'express';
 
 // TODO: For some fields allow the LIKE parameter. eg. title LIKE "%a%"
 // TODO: Decide on a smarter caching system (cursor based?), maybe even server side (redis?)
-export const getSpots: RequestHandler = async (req, res) => {
+export const getSpots: RequestHandler = async (req, res, next) => {
   try {
     const {
       page = '0',
@@ -75,10 +75,9 @@ export const getSpots: RequestHandler = async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     console.error('Error in getSpots:', error);
-    res.status(500).json({
-      message: 'Internal server error while fetching spots',
-      details: error,
-    });
+    return next(
+      new CustomError('Errror interno del server mentre cercava gli spots richiesti', 404),
+    );
   }
 };
 
@@ -88,7 +87,7 @@ export const createSpot: RequestHandler = async (req, res) => {
   res.status(201).json(spotData);
 };
 
-export const getSpotById: RequestHandler = async (req, res) => {
+export const getSpotById: RequestHandler = async (req, res, next) => {
   const { fields } = req.query as { fields?: string };
 
   // Parse and validate requested fields
@@ -102,8 +101,7 @@ export const getSpotById: RequestHandler = async (req, res) => {
   const spot = await Spot.findById(req.params.id, selectedFields.join(' ')).lean();
 
   if (!spot) {
-    res.status(404).json(NotFoundError).end();
-    return;
+    return next(new CustomError('Spot non trovato', 404));
   }
 
   res.status(200).json(spot);

@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
+import secrets from '@src/secrets';
 
 export default {
   swaggerDefinition: {
@@ -15,7 +13,7 @@ export default {
     },
     servers: [
       {
-        url: `http://localhost:${process.env.REST_API_PORT}`,
+        url: `http://localhost:${secrets.REST_API_PORT}`,
       },
     ],
   },

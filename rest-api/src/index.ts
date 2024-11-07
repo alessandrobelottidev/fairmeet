@@ -1,21 +1,14 @@
 import app from '@routes/app';
-import dotenv from 'dotenv';
+import secrets from '@src/secrets';
 import mongoose from 'mongoose';
 
-dotenv.config();
-
-const connectionUri: string = process.env.MONGODB_CONNECTION_URI ?? '';
-const restApiPort = process.env.REST_API_PORT ?? 3000;
-
-const clientOptions = {
-  dbName: 'fairmeet',
-};
+const clientOptions = { dbName: 'fairmeet' };
 
 mongoose
-  .connect(connectionUri, clientOptions)
+  .connect(secrets.MONGODB_CONNECTION_URI, clientOptions)
   .then(() => {
-    app.listen(restApiPort, () => {
-      console.log('Server running on port ', restApiPort);
+    app.listen(secrets.REST_API_PORT, () => {
+      console.log('Server running on port ', secrets.REST_API_PORT);
     });
   })
   .catch(console.dir);

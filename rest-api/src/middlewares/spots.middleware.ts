@@ -1,7 +1,7 @@
 import { spotValidationSchema } from '@validators/spot.validator';
 import e from 'express';
 
-export const validateSpot: e.RequestHandler = async (req, res, next) => {
+export const validateSpotSchema: e.RequestHandler = async (req, res, next) => {
   try {
     // Parse and transform the data.
     // If there's an error it will be raised as a z.zodError
