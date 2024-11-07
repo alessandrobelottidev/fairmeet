@@ -1,6 +1,6 @@
-import { Role } from '../user.interface';
 import { AuthError } from '@core/errors/auth.error';
 import { CustomError } from '@core/errors/custom.error';
+import { Role } from '@core/interfaces/roles.interface';
 import secrets from '@core/secrets';
 import { sendEmail } from '@core/services/email/sendEmail';
 import UserModel from '@features/auth/models/user';

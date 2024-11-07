@@ -1,5 +1,5 @@
-import { Role } from '../user.interface';
 import { AuthError } from '@core/errors/auth.error';
+import { Role } from '@core/interfaces/roles.interface';
 import secrets from '@core/secrets';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import jsonwebtoken, { JwtPayload } from 'jsonwebtoken';
@@ -60,10 +60,10 @@ const requireAuthAndRoles = (allowedRoles: Role[]): RequestHandler[] => {
           secrets.ACCESS_TOKEN.secret,
         ) as JwtPayload;
 
-        const role: string = decodedAccessToken.role ?? '';
+        const role: Role = decodedAccessToken.role ?? '';
 
         // Check if role is not in the allowedRoles, if it is not return 403 not enough permissions
-        if (!(role in allowedRoles)) {
+        if (!allowedRoles.includes(role)) {
           throw new AuthError('Authorization Error', 403, 'Non hai il ruolo richiesto');
         }
 

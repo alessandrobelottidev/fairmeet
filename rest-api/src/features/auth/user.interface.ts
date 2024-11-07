@@ -1,12 +1,5 @@
 import { Document, Model } from 'mongoose';
 
-enum Role {
-  ADMIN = 'admin',
-  BUSINESS_OWNER = 'business_owner',
-  GOV_ENTITY = 'gov_entity',
-  BASIC = 'basic',
-}
-
 interface IUser {
   handle: string;
   email: string;
@@ -27,5 +20,4 @@ interface IUserModel extends Model<IUserDocument> {
   findByCredentials(email: string, password: string): Promise<IUserDocument>;
 }
 
-export { Role };
 export type { IUser, IUserDocument, IUserModel };
