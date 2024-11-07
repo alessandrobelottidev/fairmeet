@@ -1,4 +1,4 @@
-import secrets from '@src/secrets';
+import secrets from '@core/secrets';
 
 export default {
   swaggerDefinition: {

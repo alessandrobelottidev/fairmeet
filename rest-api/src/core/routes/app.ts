@@ -1,8 +1,8 @@
-import { globalErrorHandler, notFoundErrorHandler } from '@middlewares/core/errors';
+import { globalErrorHandler, notFoundErrorHandler } from '@core/middlewares/errors';
+import auth from '@features/auth/routes/auth.routes';
+import events from '@features/places/routes/events';
+import spots from '@features/places/routes/spots.routes';
 import swaggerOptions from '@options/swagger.options';
-import auth from '@routes/auth.routes';
-import events from '@routes/events';
-import spots from '@routes/spots.routes';
 import cookies from 'cookie-parser';
 import express from 'express';
 import swaggerjsdoc from 'swagger-jsdoc';

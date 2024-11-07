@@ -1,5 +1,5 @@
-import controller from '@controllers/spots.controller';
-import { validateSpotSchema } from '@middlewares/spots.middleware';
+import controller from '@features/places/controllers/spots.controller';
+import { validateSpotSchema } from '@features/places/middlewares/spots.middleware';
 import e from 'express';
 
 const router = e.Router();

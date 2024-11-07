@@ -1,11 +1,11 @@
-import authController from '@controllers/auth.controller';
+import authController from '@features/auth/controllers/auth.controller';
+import requireAuthentication from '@features/auth/middlewares/authGuard.middleware';
 import {
   validateAuthForgotPasswordSchema,
   validateAuthLoginSchema,
   validateAuthResetPasswordSchema,
   validateAuthSignupSchema,
-} from '@middlewares/auth.middleware';
-import requireAuthentication from '@src/middlewares/core/authCheck';
+} from '@features/auth/middlewares/validation.middleware';
 import e from 'express';
 
 const router = e.Router();

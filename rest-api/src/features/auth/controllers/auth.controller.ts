@@ -1,8 +1,8 @@
-import { AuthError } from '@errors/auth.error';
-import { CustomError } from '@errors/custom.error';
-import UserModel from '@models/user';
-import { sendEmail } from '@services/email/sendEmail';
-import secrets from '@src/secrets';
+import { AuthError } from '@core/errors/auth.error';
+import { CustomError } from '@core/errors/custom.error';
+import secrets from '@core/secrets';
+import { sendEmail } from '@core/services/email/sendEmail';
+import UserModel from '@features/auth/models/user';
 import crypto from 'crypto';
 import { RequestHandler } from 'express';
 import jsonWebToken from 'jsonwebtoken';

@@ -1,5 +1,5 @@
-import { CustomError } from '@errors/custom.error';
-import UserModel from '@models/user';
+import { CustomError } from '@core/errors/custom.error';
+import UserModel from '@features/auth/models/user';
 import z from 'zod';
 
 // Base email schema that's reused across different validations

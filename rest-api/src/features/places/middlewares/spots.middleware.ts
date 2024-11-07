@@ -1,4 +1,4 @@
-import { spotValidationSchema } from '@validators/spot.validator';
+import { spotValidationSchema } from '@features/places/validators/spot.validator';
 import e from 'express';
 
 export const validateSpotSchema: e.RequestHandler = async (req, res, next) => {

@@ -1,4 +1,4 @@
-import { socialMediaHandlesSchema } from '@validators/socialMediaHandlesSchema';
+import { socialMediaHandlesSchema } from '@core/validators/socialMediaHandlesSchema';
 import { z } from 'zod';
 
 // Main Zod schema that mirrors the ISpot interface

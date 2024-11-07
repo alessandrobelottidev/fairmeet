@@ -1,5 +1,5 @@
 import mailService from './service';
-import secrets from '@src/secrets';
+import secrets from '@core/secrets';
 
 const fixedMailOptions = {
   from: secrets.EMAIL.from,

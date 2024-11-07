@@ -1,5 +1,5 @@
-import app from '@routes/app';
-import secrets from '@src/secrets';
+import app from '@core/routes/app';
+import secrets from '@core/secrets';
 import mongoose from 'mongoose';
 
 const clientOptions = { dbName: 'fairmeet' };

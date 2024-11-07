@@ -1,4 +1,4 @@
-import event from '@models/event';
+import event from '@features/places/models/event';
 import e from 'express';
 
 const router = e.Router();

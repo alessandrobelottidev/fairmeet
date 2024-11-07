@@ -1,5 +1,4 @@
-import authValidationSchema from '@validators/auth.validator';
-import fetchUserProfileSchema from '@validators/user.validator';
+import authValidationSchema from '@features/auth/validators/auth.validator';
 import { RequestHandler } from 'express';
 import { z } from 'zod';
 
@@ -28,5 +27,3 @@ export const validateAuthForgotPasswordSchema = createValidationHandler(
 export const validateAuthResetPasswordSchema = createValidationHandler(
   authValidationSchema.resetPasswordSchema,
 );
-
-// export const validateAuthProfileSchema = createValidationHandler(fetchUserProfileSchema);

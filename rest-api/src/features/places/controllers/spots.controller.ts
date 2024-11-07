@@ -1,7 +1,7 @@
-import { CustomError } from '@errors/custom.error';
-import { PaginatedResponse, PaginationQuery } from '@interfaces/pagination.interface';
-import { ISpot } from '@interfaces/spot.interface';
-import Spot from '@models/spot';
+import { CustomError } from '@core/errors/custom.error';
+import { PaginatedResponse, PaginationQuery } from '@core/interfaces/pagination.interface';
+import Spot from '@features/places/models/spot';
+import { ISpot } from '@features/places/spot.interface';
 import { RequestHandler } from 'express';
 
 // TODO: For some fields allow the LIKE parameter. eg. title LIKE "%a%"

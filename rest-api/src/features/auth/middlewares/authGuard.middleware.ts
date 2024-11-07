@@ -1,5 +1,5 @@
-import { AuthError } from '@errors/auth.error';
-import secrets from '@src/secrets';
+import { AuthError } from '@core/errors/auth.error';
+import secrets from '@core/secrets';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import jsonwebtoken, { JwtPayload } from 'jsonwebtoken';
 
