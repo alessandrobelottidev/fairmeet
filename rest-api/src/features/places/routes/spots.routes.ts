@@ -295,4 +295,7 @@ router.route('/').get(controller.getSpots).post(validateSpotSchema, controller.c
  */
 router.route('/:id').get(controller.getSpotById);
 
+router.route('/:id').patch(controller.patchSpotByID);
+
+router.route('/:id').delete(controller.deleteSpotByID);
 export default router;

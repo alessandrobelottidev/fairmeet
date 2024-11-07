@@ -98,10 +98,33 @@ export const getSpotById: RequestHandler = async (req, res, next) => {
     });
   }
 
-  const spot = await Spot.findById(req.params.id, selectedFields.join(' ')).lean();
+  const spot = await Spot.findById(req.params.id, selectedFields.join(' ')).lean(); // lean method to return a javascript object
 
   if (!spot) {
     return next(new CustomError('Spot non trovato', 404));
+  }
+
+  res.status(200).json(spot);
+};
+export const patchSpotByID: RequestHandler = async (req, res, next) => {
+  const update_fields = req.body;
+
+  //see the possible options like runValidators
+  const spot = await Spot.findByIdAndUpdate(req.params.id, update_fields, {
+    runValidators: true,
+  });
+
+  res.status(200).json(spot);
+  // const spot = await Spot.findByIdAndUpdate(req.params.id, )
+};
+
+export const deleteSpotByID: RequestHandler = async (req, res, next) => {
+  const spot = await Spot.findByIdAndDelete(req.params.id);
+  // console.log(spot);
+
+  //handle error if spot is not found
+  if (!spot) {
+    return next(new CustomError('Spot non trovato, 404'));
   }
 
   res.status(200).json(spot);
@@ -111,4 +134,6 @@ export default {
   getSpots,
   createSpot,
   getSpotById,
+  patchSpotByID,
+  deleteSpotByID,
 };
