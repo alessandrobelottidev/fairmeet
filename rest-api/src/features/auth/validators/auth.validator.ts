@@ -24,8 +24,7 @@ const loginSchema = z.object({
 // Signup schema
 const signupSchema = z
   .object({
-    firstName: z.string().trim().min(1, { message: 'Firstname CANNOT be empty' }),
-    lastName: z.string().trim().min(1, { message: 'Lastname CANNOT be empty' }),
+    handle: z.string().toLowerCase().trim().min(1, { message: 'Username CANNOT be empty' }),
     email: emailSchema,
     password: passwordSchema,
   })
@@ -36,7 +35,7 @@ const signupSchema = z
         throw new CustomError('E-mail already in use', 409);
       }
 
-      // TODO: Check for duplicate username
+      // TODO: Check for duplicate handle
 
       return true;
     },

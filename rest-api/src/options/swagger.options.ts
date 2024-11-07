@@ -17,5 +17,9 @@ export default {
       },
     ],
   },
-  apis: ['./src/routes/*.ts'],
+  apis: [
+    './src/core/routes/*.ts',
+    './src/features/places/routes/*.ts',
+    './src/features/auth/routes/*.ts',
+  ],
 };

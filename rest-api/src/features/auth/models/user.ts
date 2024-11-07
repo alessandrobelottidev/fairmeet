@@ -7,8 +7,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import mongoose, { Model, Schema } from 'mongoose';
 
 export const UserSchema = new Schema<IUserDocument, IUserModel>({
-  firstName: { type: String, trim: true, required: [true, 'First name is required'] },
-  lastName: { type: String, trim: true, required: [true, 'Last name is required'] },
+  handle: { type: String, trim: true, required: [true, 'Username is required'], unique: true },
   email: {
     type: String,
     trim: true,
@@ -18,6 +17,10 @@ export const UserSchema = new Schema<IUserDocument, IUserModel>({
   password: {
     type: String,
     required: [true, 'Password is required'],
+  },
+  role: {
+    type: String,
+    required: [true, 'A role is required'],
   },
   // We will be storing the refresh tokens here...
   tokens: [
@@ -35,16 +38,13 @@ export const UserSchema = new Schema<IUserDocument, IUserModel>({
 UserSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, ret, options) => {
-    const { firstName, lastName, email } = ret;
+    const { handle, email } = ret;
 
-    return { firstName, lastName, email }; // return fields we need
+    return { handle, email }; // return fields we need
   },
 });
 
 /* MONGOOSE MIDDLEWARE */
-// @marco @michela questo tipo di middleware e' indipedente dai middleware
-// di express. Middleware/mediator pattern e' semplicemente un tipo di design pattern.
-
 // Runs before saving the new user data, if password was changed from previous state,
 // it will get encrypted using bcrypt
 UserSchema.pre('save', async function (next) {
@@ -79,13 +79,13 @@ UserSchema.statics.findByCredentials = async function (email: string, password: 
 };
 
 /* INSTANCE METHODS */
-// @marco @michela potete leggere di piu su come funziona this su MDN:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this
 UserSchema.methods.generateAccessToken = function () {
   const accessToken = jsonwebtoken.sign(
     {
       _id: this._id.toString(),
-      fullName: `${this.firstName} ${this.lastName}`,
+      handle: this.handle,
+      role: this.role,
       email: this.email,
     },
     secrets.ACCESS_TOKEN.secret,

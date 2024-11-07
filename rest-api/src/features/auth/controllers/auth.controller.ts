@@ -1,3 +1,4 @@
+import { Role } from '../user.interface';
 import { AuthError } from '@core/errors/auth.error';
 import { CustomError } from '@core/errors/custom.error';
 import secrets from '@core/secrets';
@@ -35,12 +36,12 @@ const login: RequestHandler = async (req, res, next) => {
   }
 };
 
-const signup: RequestHandler = async (req, res, next) => {
+const signUp: RequestHandler = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { handle, email, password } = req.body;
 
     /* Custom methods on newUser are defined in User model */
-    const newUser = await UserModel.create({ firstName, lastName, email, password });
+    const newUser = await UserModel.create({ handle, email, password, role: Role.BASIC });
     await newUser.save(); // Save new User to DB
     const accessToken = newUser.generateAccessToken(); // Create Access Token
     const refreshToken = await newUser.generateRefreshToken(); // Create Refresh Token
@@ -126,9 +127,9 @@ const logoutAllDevices: RequestHandler = async (req, res, next) => {
 const refreshAccessToken: RequestHandler = async (req, res, next) => {
   try {
     const cookies = req.cookies;
-    const refreshToken = cookies[secrets.REFRESH_TOKEN.cookie.name];
+    const refreshTokenCookieName = cookies[secrets.REFRESH_TOKEN.cookie.name];
 
-    if (!refreshToken) {
+    if (!refreshTokenCookieName) {
       throw new AuthError('Authentication error!', 401, 'You are unauthenticated', {
         realm: 'Obtain new Access Token',
         error: 'no_rft',
@@ -137,12 +138,12 @@ const refreshAccessToken: RequestHandler = async (req, res, next) => {
     }
 
     const decodedRefreshTkn = jsonWebToken.verify(
-      refreshToken,
+      refreshTokenCookieName,
       secrets.REFRESH_TOKEN.secret,
     ) as jsonWebToken.JwtPayload;
     const rTknHash = crypto
       .createHmac('sha256', secrets.REFRESH_TOKEN.secret)
-      .update(refreshToken)
+      .update(refreshTokenCookieName)
       .digest('hex');
 
     const userWithRefreshTkn = await UserModel.findOne({
@@ -193,7 +194,7 @@ const forgotPassword: RequestHandler = async (req, res, next) => {
     // If email is not found, we throw an exception BUT with 200 status code
     // because it is a security vulnerability to inform users
     // that the Email is not found.
-    // To avoid username enumeration attacks, no extra response data is provided when an email is successfully sent. (The same response is provided when the username is invalid.)
+    // To avoid handle enumeration attacks, no extra response data is provided when an email is successfully sent. (The same response is provided when the handle is invalid.)
     if (!user) throw new CustomError('Reset link sent', 200, MSG);
 
     let resetToken = await user.generateResetToken();
@@ -330,7 +331,7 @@ const fetchAuthUserProfile: RequestHandler = async (req, res, next) => {
 
 export default {
   login,
-  signup,
+  signUp,
   logout,
   logoutAllDevices,
   refreshAccessToken,

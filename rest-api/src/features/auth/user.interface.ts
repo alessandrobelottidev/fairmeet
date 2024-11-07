@@ -1,11 +1,17 @@
 import { Document, Model } from 'mongoose';
 
-// TODO: Add username, remove first name and last name, we dont care about it
+enum Role {
+  ADMIN = 'admin',
+  BUSINESS_OWNER = 'business_owner',
+  GOV_ENTITY = 'gov_entity',
+  BASIC = 'basic',
+}
+
 interface IUser {
-  firstName: string;
-  lastName: string;
+  handle: string;
   email: string;
   password: string;
+  role: string;
   tokens: Array<{ token: string }>;
   resetPasswordToken?: string;
   resetPasswordTokenExpiry?: Date;
@@ -21,4 +27,5 @@ interface IUserModel extends Model<IUserDocument> {
   findByCredentials(email: string, password: string): Promise<IUserDocument>;
 }
 
+export { Role };
 export type { IUser, IUserDocument, IUserModel };
