@@ -371,6 +371,7 @@ router.route('/:id').get(controller.getSpotById);
  *       500:
  *         description: Internal server error
  */
+// MODIFICARE: risolvere i controlli poi con la scrittura del front end
 router.route('/:id').patch(controller.patchSpotByID);
 
 /**

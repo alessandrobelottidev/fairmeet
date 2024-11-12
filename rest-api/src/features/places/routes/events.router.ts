@@ -1,4 +1,6 @@
-import event from '@features/places/models/event';
+import event from '../models/event';
+import controller from '@features/places/controllers/events.controller';
+import { validateSpotSchema } from '@features/places/middlewares/events.middleware';
 import e from 'express';
 
 const router = e.Router();

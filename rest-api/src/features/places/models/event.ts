@@ -1,15 +1,96 @@
+// import mongoose from 'mongoose';
+// export default mongoose.model(
+//   'event',
+//   new mongoose.Schema({
+//     title: String,
+//     address: String,
+//     description: String,
+//     latitude: Number,
+//     longitude: Number,
+//     startDateTimeZ: String,
+//     endDateTimeZ: String,
+//     updated_at: { type: Date, default: Date.now },
+//   }),
+// );
+import { IEventDocument } from '@features/places/event.interface';
 import mongoose from 'mongoose';
 
-export default mongoose.model(
-  'event',
-  new mongoose.Schema({
-    title: String,
-    address: String,
-    latitude: Number,
-    longitude: Number,
-    startDateTimeZ: String,
-    endDateTimeZ: String,
-    description: String,
-    updated_at: { type: Date, default: Date.now },
-  }),
-);
+const eventSchema = new mongoose.Schema<IEventDocument>({
+  title: {
+    type: String,
+    required: [true, 'Title is required'],
+    trim: true,
+    minlength: [3, 'Title must be at least 3 characters long'],
+  },
+  address: {
+    type: String,
+    required: [true, 'Address is required'],
+    trim: true,
+  },
+  description: {
+    type: String,
+    required: [true, 'Description is required'],
+    trim: true,
+    minlength: [10, 'Description must be at least 10 characters long'],
+  },
+  latitude: {
+    type: Number,
+    required: [true, 'Latitude is required'],
+    min: [-90, 'Latitude must be between -90 and 90'],
+    max: [90, 'Latitude must be between -90 and 90'],
+  },
+  longitude: {
+    type: Number,
+    required: [true, 'Longitude is required'],
+    min: [-180, 'Longitude must be between -180 and 180'],
+    max: [180, 'Longitude must be between -180 and 180'],
+  },
+  startDateTimeZ: {
+    type: Number,
+    required: true,
+  },
+  endDateTimeZ: {
+    type: Number,
+    required: true,
+  },
+  abstract: {
+    type: String,
+    trim: true,
+  },
+  email: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    validate: {
+      validator: function (v: string) {
+        return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v);
+      },
+      message: 'Please enter a valid email',
+    },
+  },
+  socialMediaHandles: {
+    type: Map,
+    of: String,
+  },
+  featuredImageUrl: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: function (v: string) {
+        return /^(http|https):\/\/[^ "]+$/.test(v);
+      },
+      message: 'Please enter a valid URL',
+    },
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+eventSchema.pre('save', function (next) {
+  this.updated_at = new Date();
+  next();
+});
+
+export default mongoose.model<IEventDocument>('event', eventSchema);
