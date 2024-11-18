@@ -2,11 +2,13 @@ import { globalErrorHandler, notFoundErrorHandler } from '@core/middlewares/erro
 import auth from '@features/auth/routes/auth.routes';
 import events from '@features/places/routes/events.routes';
 import spots from '@features/places/routes/spots.routes';
+import places from '@features/places/routes/places.routes';
 import swaggerOptions from '@options/swagger.options';
 import cookies from 'cookie-parser';
 import express from 'express';
 import swaggerjsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import { features } from 'process';
 
 const app = express();
 const swaggerDocs = swaggerjsdoc(swaggerOptions);
@@ -37,6 +39,7 @@ app.use('/v1/auth', auth);
 
 app.use('/v1/events', events);
 app.use('/v1/spots', spots);
+app.use('/v1/places', places);
 
 // Handle unregistered route for all HTTP Methods
 app.all('*', notFoundErrorHandler);

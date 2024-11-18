@@ -4,6 +4,7 @@ Attualmente spots e events hanno lo stesso schema
 import { socialMediaHandlesSchema } from '@core/validators/socialMediaHandlesSchema';
 import { z } from 'zod';
 
+
 // Main Zod schema that mirrors the ISpot interface
 export const eventValidationSchema = z.object({
   title: z
@@ -25,6 +26,11 @@ export const eventValidationSchema = z.object({
     .number()
     .min(-180, 'Longitude must be between -180 and 180')
     .max(180, 'Longitude must be between -180 and 180'),
+
+  startDateTimeZ: z.string().datetime(),
+  // .min(new Date());
+
+  endDateTimeZ: z.string().datetime(),
 
   abstract: z.string().trim().optional(),
 

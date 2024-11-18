@@ -5,6 +5,7 @@ import { IEvent } from '@features/places/event.interface';
 import Event from '@features/places/models/event';
 import { RequestHandler } from 'express';
 
+
 // TODO: For some fields allow the LIKE parameter. eg. title LIKE "%a%"
 // TODO: Decide on a smarter caching system (cursor based?), maybe even server side (redis?)
 export const getEvents: RequestHandler = async (req, res, next) => {
@@ -132,10 +133,30 @@ export const deleteEventByID: RequestHandler = async (req, res, next) => {
   res.status(200).json(event);
 };
 
+export const getValidEventByCoordinates = async(latitude: number, longitude: number)=>{
+  
+  console.log(latitude);
+  console.log(longitude);
+
+  const event = await Event.find({})
+    .where('latitude')
+    .gte(latitude - 1)
+    .lte(latitude + 1)
+    .where('longitude')
+    .gte(longitude-1)
+    .lte(longitude+1)
+    .then();
+    // const event = await Event.find({});
+
+  return event;
+  
+};
+
 export default {
   getEvents: catchAsync(getEvents),
   createEvent: catchAsync(createEvent),
   getEventById: catchAsync(getEventById),
   patchEventByID: catchAsync(patchEventByID),
   deleteEventByID: catchAsync(deleteEventByID),
-};
+  getValidEventByCoordinates: getValidEventByCoordinates
+}
