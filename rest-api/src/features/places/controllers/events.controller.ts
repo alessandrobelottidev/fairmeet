@@ -5,7 +5,6 @@ import { IEvent } from '@features/places/event.interface';
 import Event from '@features/places/models/event';
 import { RequestHandler } from 'express';
 
-
 // TODO: For some fields allow the LIKE parameter. eg. title LIKE "%a%"
 // TODO: Decide on a smarter caching system (cursor based?), maybe even server side (redis?)
 export const getEvents: RequestHandler = async (req, res, next) => {
@@ -114,7 +113,7 @@ export const patchEventByID: RequestHandler = async (req, res, next) => {
   //see the possible options like runValidators
   const event = await Event.findByIdAndUpdate(req.params.id, update_fields, {
     runValidators: true,
-    returnDocument: 'after'
+    returnDocument: 'after',
   });
 
   res.status(200).json(event);
@@ -133,23 +132,36 @@ export const deleteEventByID: RequestHandler = async (req, res, next) => {
   res.status(200).json(event);
 };
 
-export const getValidEventByCoordinates = async(latitude: number, longitude: number)=>{
-  
-  console.log(latitude);
-  console.log(longitude);
+export const getEventByCoordinates = async (latitude: number, longitude: number) => {
+  // console.log(latitude);
+  // console.log(longitude);
 
   const event = await Event.find({})
     .where('latitude')
     .gte(latitude - 1)
     .lte(latitude + 1)
     .where('longitude')
-    .gte(longitude-1)
-    .lte(longitude+1)
+    .gte(longitude - 1)
+    .lte(longitude + 1)
     .then();
-    // const event = await Event.find({});
+  // const event = await Event.find({});
 
-  return event;
-  
+  return event.map((el) => {
+    return {
+      title: el.title,
+      address: el.address,
+      description: el.description,
+      latitude: el.latitude,
+      longitude: el.longitude,
+      startDateTimeZ: el.startDateTimeZ,
+      endDateTimeZ: el.endDateTimeZ,
+      abstract: el.abstract,
+      email: el.email,
+      socialMediaHandles: el.socialMediaHandles,
+      featuredImageUrl: el.featuredImageUrl,
+      updated_at: el.updated_at,
+    } as IEvent;
+  });
 };
 
 export default {
@@ -158,5 +170,5 @@ export default {
   getEventById: catchAsync(getEventById),
   patchEventByID: catchAsync(patchEventByID),
   deleteEventByID: catchAsync(deleteEventByID),
-  getValidEventByCoordinates: getValidEventByCoordinates
-}
+  getEventByCoordinates: getEventByCoordinates,
+};

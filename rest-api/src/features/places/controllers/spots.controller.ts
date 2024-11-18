@@ -132,10 +132,41 @@ export const deleteSpotByID: RequestHandler = async (req, res, next) => {
   res.status(200).json(spot);
 };
 
+export const getSpotByCoordinates = async (latitude: number, longitude: number) => {
+  // console.log(latitude);
+  // console.log(longitude);
+
+  const spots = await Spot.find({})
+    .where('latitude')
+    .gte(latitude - 1)
+    .lte(latitude + 1)
+    .where('longitude')
+    .gte(longitude - 1)
+    .lte(longitude + 1)
+    .then();
+  // const spots = await Spot.find({});
+
+  return spots.map((el) => {
+    return {
+      title: el.title,
+      address: el.address,
+      description: el.description,
+      latitude: el.latitude,
+      longitude: el.longitude,
+      abstract: el.abstract,
+      email: el.email,
+      socialMediaHandles: el.socialMediaHandles,
+      featuredImageUrl: el.featuredImageUrl,
+      updated_at: el.updated_at,
+    } as ISpot;
+  });
+};
+
 export default {
   getSpots: catchAsync(getSpots),
   createSpot: catchAsync(createSpot),
   getSpotById: catchAsync(getSpotById),
   patchSpotByID: catchAsync(patchSpotByID),
   deleteSpotByID: catchAsync(deleteSpotByID),
+  getSpotByCoordinates: getSpotByCoordinates,
 };
