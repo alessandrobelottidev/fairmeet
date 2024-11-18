@@ -1,7 +1,8 @@
 import { globalErrorHandler, notFoundErrorHandler } from '@core/middlewares/errors';
 import auth from '@features/auth/routes/auth.routes';
-import events from '@features/places/routes/events.routers';
+import events from '@features/places/routes/events.routes';
 import spots from '@features/places/routes/spots.routes';
+import circle from '@features/places/routes/circle.routes';
 import swaggerOptions from '@options/swagger.options';
 import cookies from 'cookie-parser';
 import express from 'express';
@@ -37,6 +38,7 @@ app.use('/v1/auth', auth);
 
 app.use('/v1/events', events);
 app.use('/v1/spots', spots);
+app.use('/v1/circle', circle);
 
 // Handle unregistered route for all HTTP Methods
 app.all('*', notFoundErrorHandler);
