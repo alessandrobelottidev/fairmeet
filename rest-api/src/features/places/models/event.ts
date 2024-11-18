@@ -1,6 +1,3 @@
-/*
-DA MOFICARE: tempo di inizio e fine evento, assegnare il tipo corretto
-*/
 import { IEventDocument } from '@features/places/event.interface';
 import mongoose from 'mongoose';
 
