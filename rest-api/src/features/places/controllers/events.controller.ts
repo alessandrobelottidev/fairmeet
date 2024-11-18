@@ -113,7 +113,7 @@ export const patchEventByID: RequestHandler = async (req, res, next) => {
   //see the possible options like runValidators
   const event = await Event.findByIdAndUpdate(req.params.id, update_fields, {
     runValidators: true,
-    returnDocument: 'after',
+    returnDocument: 'after'
   });
 
   res.status(200).json(event);

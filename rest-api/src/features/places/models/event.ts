@@ -35,11 +35,11 @@ const eventSchema = new mongoose.Schema<IEventDocument>({
     max: [180, 'Longitude must be between -180 and 180'],
   },
   startDateTimeZ: {
-    type: Number,
+    type: Date,
     required: true,
   },
   endDateTimeZ: {
-    type: Number,
+    type: Date,
     required: true,
   },
   abstract: {

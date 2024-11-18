@@ -27,7 +27,7 @@ export const spotValidationSchema = z.object({
 
   email: z.string().email('Invalid email address').toLowerCase().optional(),
 
-  socialMediaHandles: socialMediaHandlesSchema.optional(),
+  socialMediaHandles:  socialMediaHandlesSchema.optional(), 
 
   featuredImageUrl: z.string().url('Invalid featured image URL').optional(),
 

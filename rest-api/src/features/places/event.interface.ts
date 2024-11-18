@@ -6,8 +6,8 @@ export interface IEvent {
   description: string;
   latitude: number;
   longitude: number;
-  startDateTimeZ: number;
-  endDateTimeZ: number;
+  startDateTimeZ: Date;
+  endDateTimeZ: Date;
   abstract?: string;
   email?: string;
   socialMediaHandles?: Record<string, string>;
