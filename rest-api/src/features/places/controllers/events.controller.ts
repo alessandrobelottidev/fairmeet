@@ -136,23 +136,16 @@ export const getEventByCoordinates = async (latitude: number, longitude: number)
   // console.log(latitude);
   // console.log(longitude);
 
-  const event = await Event.find({})
-    .where('latitude')
-    .gte(latitude - 1)
-    .lte(latitude + 1)
-    .where('longitude')
-    .gte(longitude - 1)
-    .lte(longitude + 1)
-    .then();
+  const event_coord = { type: 'Point', coordinates: [longitude, latitude] };
+  const event_list = await Event.find({ event_coord });
   // const event = await Event.find({});
 
-  return event.map((el) => {
+  return event_list.map((el) => {
     return {
       title: el.title,
       address: el.address,
       description: el.description,
-      latitude: el.latitude,
-      longitude: el.longitude,
+      location: el.location,
       startDateTimeZ: el.startDateTimeZ,
       endDateTimeZ: el.endDateTimeZ,
       abstract: el.abstract,

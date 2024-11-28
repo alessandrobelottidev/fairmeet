@@ -5,8 +5,10 @@ export interface IPlace {
   title: string;
   address: string;
   description: string;
-  latitude: number;
-  longitude: number;
+  location: {
+    type: 'Point'; // GeoJSON type
+    coordinates: [number, number];
+  };
   abstract?: string;
   email?: string;
   socialMediaHandles?: Record<string, string>;

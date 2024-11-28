@@ -15,4 +15,5 @@ router
   .get(controller.getEventById)
   .patch(controller.patchEventByID)
   .delete(controller.deleteEventByID);
+
 export default router;
