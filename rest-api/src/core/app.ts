@@ -1,4 +1,4 @@
-import { globalErrorHandler, notFoundErrorHandler } from '@core/middlewares/errors';
+import { globalErrorHandler, notFoundErrorHandler } from '@core/middlewares/errors/errorHandler';
 import auth from '@features/auth/routes/auth.routes';
 import groups from '@features/groups/routes/group.routes';
 import events from '@features/places/routes/events.routes';

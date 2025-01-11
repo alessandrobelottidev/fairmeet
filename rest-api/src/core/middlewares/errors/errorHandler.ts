@@ -1,5 +1,5 @@
-import { AuthError } from '@core/errors/auth.error';
-import { CustomError } from '@core/errors/custom.error';
+import { AuthError } from '@core/middlewares/errors/auth.error';
+import { CustomError } from '@core/middlewares/errors/custom.error';
 import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 import { fromZodError } from 'zod-validation-error';

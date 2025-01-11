@@ -1,6 +1,6 @@
-import { CustomError } from '@core/errors/custom.error';
+import { CustomError } from '@core/middlewares/errors/custom.error';
 import secrets from '@core/secrets';
-import type { IUserDocument, IUserModel } from '@features/auth/user.interface';
+import type { IUserDocument, IUserModel } from '@features/auth/types/user';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import jsonwebtoken from 'jsonwebtoken';

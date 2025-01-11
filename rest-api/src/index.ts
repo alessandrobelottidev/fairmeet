@@ -1,4 +1,4 @@
-import app from '@core/routes/app';
+import app from '@core/app';
 import secrets from '@core/secrets';
 import mongoose from 'mongoose';
 

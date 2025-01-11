@@ -1,4 +1,4 @@
-import { IEventDocument } from '@features/places/event.interface';
+import { IEventDocument } from '@features/places/types/event.interface';
 import mongoose from 'mongoose';
 
 const eventSchema = new mongoose.Schema<IEventDocument>({

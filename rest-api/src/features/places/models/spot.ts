@@ -1,4 +1,4 @@
-import { ISpotDocument } from '@features/places/spot.interface';
+import { ISpotDocument } from '@features/places/types/spot.interface';
 import mongoose from 'mongoose';
 
 const spotSchema = new mongoose.Schema<ISpotDocument>({

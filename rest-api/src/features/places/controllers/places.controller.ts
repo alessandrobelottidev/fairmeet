@@ -1,7 +1,6 @@
-import { ISpot } from '../spot.interface';
+import { ISpot } from '../types/spot.interface';
 import { getEventByCoordinates } from './events.controller';
 import { getSpotByCoordinates } from './spots.controller';
-import { catchAsync } from '@core/utils/catchAsync';
 import { RequestHandler } from 'express';
 
 export const getPlacesByCoordinates: RequestHandler = async (req, res, next) => {
@@ -16,5 +15,5 @@ export const getPlacesByCoordinates: RequestHandler = async (req, res, next) => 
 };
 
 export default {
-  getPlacesByCoordinates: catchAsync(getPlacesByCoordinates),
+  getPlacesByCoordinates: getPlacesByCoordinates,
 };

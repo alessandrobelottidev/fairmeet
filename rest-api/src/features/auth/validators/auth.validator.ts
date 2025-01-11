@@ -1,4 +1,4 @@
-import { CustomError } from '@core/errors/custom.error';
+import { CustomError } from '@core/middlewares/errors/custom.error';
 import UserModel from '@features/auth/models/user';
 import z from 'zod';
 
@@ -32,10 +32,13 @@ const signupSchema = z
     async (data) => {
       const emailExists = await UserModel.findOne({ email: data.email });
       if (emailExists) {
-        throw new CustomError('E-mail already in use', 409);
+        throw new CustomError('E-mail gia in uso...', 409);
       }
 
-      // TODO: Check for duplicate handle
+      const handleExists = await UserModel.findOne({ handle: data.handle });
+      if (handleExists) {
+        throw new CustomError('Username handle gia in uso...', 409);
+      }
 
       return true;
     },

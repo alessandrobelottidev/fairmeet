@@ -1,6 +1,5 @@
-import { AuthError } from '@core/errors/auth.error';
-import { CustomError } from '@core/errors/custom.error';
-import { Role } from '@core/interfaces/roles.interface';
+import { Role } from '../types/role';
+import { AuthError, BadRequestError, CustomError } from '@core/middlewares/errors';
 import secrets from '@core/secrets';
 import { sendEmail } from '@core/services/email/sendEmail';
 import UserModel from '@features/auth/models/user';
@@ -272,7 +271,7 @@ const resetPassword: RequestHandler = async (req, res, next) => {
       resetpasswordtoken: resetTokenHash,
       resetpasswordtokenexpiry: { $gt: Date.now() },
     });
-    if (!user) throw new CustomError('The reset link is invalid', 400);
+    if (!user) throw new BadRequestError('The reset link is invalid');
 
     user.password = req.body.password; // Will be hashed by mongoose middleware
     user.resetPasswordToken = undefined;

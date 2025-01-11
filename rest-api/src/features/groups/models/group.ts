@@ -1,4 +1,4 @@
-import type { IGroupDocument, IGroupModel } from '@features/groups/group.interface';
+import type { IGroupDocument, IGroupModel } from '@features/groups/types/group.interface';
 import mongoose, { Schema } from 'mongoose';
 
 const GroupSchema = new Schema<IGroupDocument, IGroupModel>({

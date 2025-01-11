@@ -1,86 +1,74 @@
-import { CustomError } from '@core/errors/custom.error';
-import { PaginatedResponse, PaginationQuery } from '@core/interfaces/pagination.interface';
-import { catchAsync } from '@core/utils/catchAsync';
-import { IEvent } from '@features/places/event.interface';
+import { executeQuery, parseFields, parsePagination, setCache } from '@core/middlewares';
+import { NotFoundError } from '@core/middlewares/errors/notFound.error';
 import Event from '@features/places/models/event';
 import { RequestHandler } from 'express';
 
-// TODO: For some fields allow the LIKE parameter. eg. title LIKE "%a%"
-// TODO: Decide on a smarter caching system (cursor based?), maybe even server side (redis?)
-export const getEvents: RequestHandler = async (req, res, next) => {
-  try {
-    const {
-      page = '0',
-      limit = '10',
-      sortBy = 'updated_at',
-      order = 'desc',
-      fields,
-    } = req.query as PaginationQuery;
+const ALLOWED_FIELDS = [
+  'title',
+  'address',
+  'description',
+  'location',
+  'startDateTimeZ',
+  'endDateTimeZ',
+  'abstract',
+  'email',
+  'socialMediaHandles',
+  'featuredImageUrl',
+  'updated_at',
+] as string[];
 
-    // Convert string parameters to numbers
-    const pageNum = Math.max(0, parseInt(page));
-    const limitNum = Math.min(100, Math.max(1, parseInt(limit))); // Cap at 100 items per page
+export const getEvents: RequestHandler[] = [
+  parsePagination({ maxLimit: 100 }),
+  parseFields(Event, {
+    allowedFields: ALLOWED_FIELDS,
+  }),
+  setCache({ timeout: 900 }),
+  executeQuery(Event, {
+    preQuery: async (query) => {
+      query.where('startDateTimeZ').gte(new Date()); // Using where/gte for more consistent syntax
+    },
+    postQuery: async (events) => {
+      return events.map(
+        (event: {
+          startDateTimeZ: string | number | Date;
+          endDateTimeZ: string | number | Date;
+        }) => ({
+          ...event,
+          formattedStartDate: event.startDateTimeZ
+            ? new Date(event.startDateTimeZ).toLocaleDateString()
+            : undefined,
+          formattedEndDate: event.endDateTimeZ
+            ? new Date(event.endDateTimeZ).toLocaleDateString()
+            : undefined,
+        }),
+      );
+    },
+  }),
+];
 
-    // Parse and validate requested fields
-    let selectedFields: string[] = [];
-    if (fields) {
-      selectedFields = fields.split(',').filter((field): field is keyof IEvent => {
-        return field in Event.schema.paths;
-      });
-    }
-
-    // Calculate skip for pagination
-    const skip = pageNum * limitNum;
-
-    // Build sort object
-    const sortOptions: { [key: string]: 'asc' | 'desc' } = {
-      [sortBy]: order,
-    };
-
-    // Build the query
-    let query = Event.find().sort(sortOptions).skip(skip).limit(limitNum);
-
-    // Add field selection if specified
-    if (selectedFields.length > 0) {
-      query = query.select(selectedFields.join(' '));
-    }
-
-    // Execute queries in parallel using Promise.all
-    const [events, totalDocs] = await Promise.all([
-      query.lean(), // Use lean() for better performance when you don't need Mongoose document features
-      Event.countDocuments(),
-    ]);
-
-    // Calculate pagination metadata
-    const totalPages = Math.ceil(totalDocs / limitNum);
-    const hasNextPage = pageNum < totalPages - 1;
-    const hasPrevPage = pageNum > 0;
-
-    const response: PaginatedResponse<(typeof events)[0]> = {
-      data: events,
-      pagination: {
-        totalDocs,
-        totalPages,
-        currentPage: pageNum,
-        limit: limitNum,
-        hasNextPage,
-        hasPrevPage,
-        nextPage: hasNextPage ? pageNum + 1 : null,
-        prevPage: hasPrevPage ? pageNum - 1 : null,
-      },
-    };
-
-    // Set Cache-Control header to enable caching
-    res.setHeader('Cache-Control', 'public, max-age=900'); // Cache for 15 minutes, expressed in seconds
-
-    res.status(200).json(response);
-  } catch (error) {
-    console.error('Error in getEvents:', error);
-    return next(
-      new CustomError('Errror interno del server mentre cercava gli events richiesti', 404),
-    );
-  }
-};
+export const getEventById: RequestHandler[] = [
+  parseFields(Event, {
+    allowedFields: ALLOWED_FIELDS,
+  }),
+  executeQuery(Event, {
+    preQuery: async (query, req) => {
+      query.where('_id').equals(req.params.id).limit(1); // Using where/equals instead of findById
+    },
+    postQuery: async (events) => {
+      const event = events[0];
+      if (!event) return null;
+      return {
+        ...event,
+        formattedStartDate: event.startDateTimeZ
+          ? new Date(event.startDateTimeZ).toLocaleDateString()
+          : undefined,
+        formattedEndDate: event.endDateTimeZ
+          ? new Date(event.endDateTimeZ).toLocaleDateString()
+          : undefined,
+      };
+    },
+  }),
+];
 
 export const createEvent: RequestHandler = async (req, res) => {
   const event = new Event(req.body);
@@ -88,80 +76,51 @@ export const createEvent: RequestHandler = async (req, res) => {
   res.status(201).json(eventData);
 };
 
-export const getEventById: RequestHandler = async (req, res, next) => {
-  const { fields } = req.query as { fields?: string };
-
-  // Parse and validate requested fields
-  let selectedFields: string[] = [];
-  if (fields) {
-    selectedFields = fields.split(',').filter((field): field is keyof IEvent => {
-      return field in Event.schema.paths;
-    });
-  }
-
-  const event = await Event.findById(req.params.id, selectedFields.join(' ')).lean(); // lean method to return a javascript object
-
-  if (!event) {
-    return next(new CustomError('Event non trovato', 404));
-  }
-
-  res.status(200).json(event);
-};
 export const patchEventByID: RequestHandler = async (req, res, next) => {
   const update_fields = req.body;
 
-  //see the possible options like runValidators
   const event = await Event.findByIdAndUpdate(req.params.id, update_fields, {
     runValidators: true,
     returnDocument: 'after',
   });
 
-  res.status(200).json(event);
-  // const event = await Event.findByIdAndUpdate(req.params.id, )
-};
-
-export const deleteEventByID: RequestHandler = async (req, res, next) => {
-  const event = await Event.findByIdAndDelete(req.params.id);
-  // console.log(event);
-
-  //handle error if event is not found
   if (!event) {
-    return next(new CustomError('Event non trovato, 404'));
+    return next(new NotFoundError('Evento non trovato'));
   }
 
   res.status(200).json(event);
 };
 
-export const getEventByCoordinates = async (latitude: number, longitude: number) => {
-  // console.log(latitude);
-  // console.log(longitude);
+export const deleteEventByID: RequestHandler = async (req, res, next) => {
+  const event = await Event.findByIdAndDelete(req.params.id);
 
-  const event_coord = { type: 'Point', coordinates: [longitude, latitude] };
-  const event_list = await Event.find({ event_coord });
-  // const event = await Event.find({});
+  if (!event) {
+    return next(new NotFoundError('Evento non trovato'));
+  }
 
-  return event_list.map((el) => {
-    return {
-      title: el.title,
-      address: el.address,
-      description: el.description,
-      location: el.location,
-      startDateTimeZ: el.startDateTimeZ,
-      endDateTimeZ: el.endDateTimeZ,
-      abstract: el.abstract,
-      email: el.email,
-      socialMediaHandles: el.socialMediaHandles,
-      featuredImageUrl: el.featuredImageUrl,
-      updated_at: el.updated_at,
-    } as IEvent;
-  });
+  res.status(200).json(event);
 };
 
+export const getEventByCoordinates: RequestHandler[] = [
+  parsePagination({ maxLimit: 100 }),
+  parseFields(Event, {
+    allowedFields: ALLOWED_FIELDS,
+  }),
+  setCache({ timeout: 900 }),
+  executeQuery(Event, {
+    preQuery: async (query, req) => {
+      const { latitude, longitude } = req.query;
+      const event_coord = { type: 'Point', coordinates: [Number(longitude), Number(latitude)] };
+      query.where({ event_coord });
+    },
+  }),
+];
+
 export default {
-  getEvents: catchAsync(getEvents),
-  createEvent: catchAsync(createEvent),
-  getEventById: catchAsync(getEventById),
-  patchEventByID: catchAsync(patchEventByID),
-  deleteEventByID: catchAsync(deleteEventByID),
-  getEventByCoordinates: getEventByCoordinates,
+  getEvents,
+  createEvent,
+  getEventById,
+  patchEventByID,
+  deleteEventByID,
+  getEventByCoordinates,
 };

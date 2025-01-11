@@ -1,4 +1,4 @@
-import { socialMediaHandlesSchema } from '@core/validators/socialMediaHandlesSchema';
+import { socialMediaHandlesSchema } from '@core/schemas/socialMediaHandlesSchema';
 import { z } from 'zod';
 
 export const placeValidationSchema = z.object({

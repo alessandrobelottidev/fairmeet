@@ -1,4 +1,4 @@
-import type { IMessageDocument, IMessageModel } from '@features/groups/message.interface';
+import type { IMessageDocument, IMessageModel } from '@features/groups/types/message.interface';
 import mongoose, { Schema } from 'mongoose';
 
 export const MessageSchema = new Schema<IMessageDocument, IMessageModel>({

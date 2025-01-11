@@ -13,5 +13,13 @@
     "production": {
       "baseUrl": "http://api.fairmeet.com/v1"
     }
+  },
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true
   }
 }

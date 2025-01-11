@@ -1,5 +1,5 @@
-import { IGroup, IGroupDocument } from '../group.interface';
-import { CustomError } from '@core/errors/custom.error';
+import { IGroupDocument } from '../types/group.interface';
+import { CustomError } from '@core/middlewares/errors/custom.error';
 import GroupModel from '@features/groups/models/group';
 import { RequestHandler } from 'express';
 import mongoose from 'mongoose';
