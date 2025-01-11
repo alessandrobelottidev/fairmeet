@@ -8,7 +8,7 @@ export default {
       description: 'All the data needed to power the frontend',
       version: '1.0.0',
       contact: {
-        name: 'Marco Adami, Alessandro Belotti, Michela Stopato',
+        name: 'Marco Adami, Alessandro Belotti',
       },
     },
     servers: [
