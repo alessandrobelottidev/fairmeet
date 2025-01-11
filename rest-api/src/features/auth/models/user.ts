@@ -6,7 +6,7 @@ import crypto from 'crypto';
 import jsonwebtoken from 'jsonwebtoken';
 import mongoose, { Model, Schema } from 'mongoose';
 
-export const UserSchema = new Schema<IUserDocument, IUserModel>({
+const UserSchema = new Schema<IUserDocument, IUserModel>({
   handle: { type: String, trim: true, required: [true, 'Username is required'], unique: true },
   email: {
     type: String,
