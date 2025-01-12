@@ -27,7 +27,15 @@ const requireAuthentication: RequestHandler = async (
     const decoded = jsonwebtoken.verify(aTkn, secrets.ACCESS_TOKEN.secret) as JwtPayload;
 
     // Attach authenticated user and Access Token to request object
-    req.body.user = { id: decoded._id ?? '' };
+    // req.body.user = { id: decoded._id ?? '' };
+
+    req.body.user = {
+      id: decoded._id ?? '',
+      role: decoded.role,
+      handle: decoded.handle,
+      email: decoded.email,
+    };
+
     req.body.accessToken = aTkn;
     next();
   } catch (err: any) {

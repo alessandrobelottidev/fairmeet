@@ -51,6 +51,11 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     return;
   }
 
+  if (err instanceof Error) {
+    res.status(500).json({ error: err.message });
+    return;
+  }
+
   // Default error if an unexpected Express error is thrown
   res.status(500).json({ error: 'Qualcosa e` andato storto...' });
   return;
