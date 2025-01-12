@@ -9,7 +9,7 @@ const router = e.Router();
  * /v1/spots:
  *   get:
  *     tags:
- *       - Spots
+ *       - Spots | FEATURE
  *     summary: Get all spots
  *     description: Retrieve a paginated list of all spots, with options for sorting and selecting specific fields.
  *     parameters:
@@ -101,7 +101,7 @@ const router = e.Router();
  *         description: Internal server error.
  *   post:
  *     tags:
- *       - Spots
+ *       - Spots | FEATURE
  *     summary: Create a new spot
  *     description: Add a new spot to the database with detailed information.
  *     requestBody:
@@ -218,7 +218,7 @@ router.route('/').get(controller.getSpots).post(validateSpotSchema, controller.c
  * /v1/spots/{id}:
  *   get:
  *     tags:
- *       - Spots
+ *       - Spots | FEATURE
  *     summary: Get spot by ID
  *     description: Retrieve details of a specific spot by its ID, with an option to select specific fields.
  *     parameters:
@@ -300,7 +300,7 @@ router.route('/:id').get(controller.getSpotById);
  * /v1/spots/{id}:
  *   patch:
  *     tags:
- *       - Spots
+ *       - Spots | FEATURE
  *     summary: Update a specific spot by ID
  *     description: Modify one or more fields of a specific spot.
  *     parameters:
@@ -379,7 +379,7 @@ router.route('/:id').patch(controller.patchSpotByID);
  * /v1/spots/{id}:
  *   delete:
  *     tags:
- *       - Spots
+ *       - Spots | FEATURE
  *     summary: Delete a spot by ID
  *     description: Remove a specific spot from the database by its ID.
  *     parameters:

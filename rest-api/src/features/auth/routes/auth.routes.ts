@@ -15,7 +15,7 @@ const router = e.Router();
  * /v1/auth/login:
  *   post:
  *     tags:
- *       - Auth
+ *       - Auth | FEATURE
  *     summary: Login user
  *     description: Authenticate user and receive access token plus refresh token cookie
  *     requestBody:
@@ -77,7 +77,7 @@ router.post('/login', validateAuthLoginSchema, authController.login);
  * /v1/auth/signup:
  *   post:
  *     tags:
- *       - Auth
+ *       - Auth | FEATURE
  *     summary: Register a new user
  *     description: Create a new user account and receive access token plus refresh token cookie
  *     requestBody:
@@ -143,7 +143,7 @@ router.post('/signup', validateAuthSignupSchema, authController.signUp);
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Auth
+ *       - Auth | FEATURE
  *     summary: Logout user
  *     description: Logout user from current device by invalidating refresh token
  *     parameters:
@@ -182,7 +182,7 @@ router.post('/logout', requireAuthentication, authController.logout);
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Auth
+ *       - Auth | FEATURE
  *     summary: Logout from all devices
  *     description: Logout user from all devices by invalidating all refresh tokens
  *     parameters:
@@ -219,7 +219,7 @@ router.post('/master-logout', requireAuthentication, authController.logoutAllDev
  * /v1/auth/reauth:
  *   post:
  *     tags:
- *       - Auth
+ *       - Auth | FEATURE
  *     summary: Refresh access token
  *     description: Get a new access token using refresh token cookie
  *     responses:
@@ -251,7 +251,7 @@ router.post('/reauth', authController.refreshAccessToken);
  * /v1/auth/forgotpass:
  *   post:
  *     tags:
- *       - Auth
+ *       - Auth | FEATURE
  *     summary: Request password reset
  *     description: Send password reset link to user's email with time-limited token
  *     requestBody:
@@ -294,7 +294,7 @@ router.post('/forgotpass', validateAuthForgotPasswordSchema, authController.forg
  * /v1/auth/resetpass/{resetToken}:
  *   patch:
  *     tags:
- *       - Auth
+ *       - Auth | FEATURE
  *     summary: Reset password
  *     description: Reset user password using time-limited reset token
  *     parameters:
@@ -352,7 +352,7 @@ router.patch(
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Auth
+ *       - Auth | FEATURE
  *     summary: Get authenticated user profile
  *     description: Retrieve the profile of the currently authenticated user
  *     parameters:

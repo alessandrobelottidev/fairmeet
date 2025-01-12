@@ -35,5 +35,6 @@ export default {
     './src/core/routes/*.ts',
     './src/features/places/routes/*.ts',
     './src/features/auth/routes/*.ts',
+    './src/features/groups/routes/*.ts',
   ],
 };

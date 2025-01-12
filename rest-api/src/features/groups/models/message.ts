@@ -31,6 +31,6 @@ MessageSchema.statics.findByGroup = async function (
     .populate('sender');
 };
 
-const GroupModel = mongoose.model<IMessageDocument, IMessageModel>('Message', MessageSchema);
+const MessageModel = mongoose.model<IMessageDocument, IMessageModel>('Message', MessageSchema);
 
-export default GroupModel;
+export default MessageModel;
