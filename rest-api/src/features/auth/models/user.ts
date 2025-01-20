@@ -38,9 +38,9 @@ const UserSchema = new Schema<IUserDocument, IUserModel>({
 UserSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, ret, options) => {
-    const { handle, email } = ret;
+    const { handle, email, role } = ret;
 
-    return { handle, email }; // return fields we need
+    return { handle, email, role }; // return fields we need
   },
 });
 

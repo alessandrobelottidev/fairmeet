@@ -5,14 +5,18 @@ import meetings from '@features/meetings/routes/meeting.routes';
 import events from '@features/places/routes/events.routes';
 import places from '@features/places/routes/places.routes';
 import spots from '@features/places/routes/spots.routes';
+import corsOptions from '@options/cors.options';
 import swaggerOptions from '@options/swagger.options';
 import cookies from 'cookie-parser';
+import cors from 'cors';
 import express from 'express';
 import swaggerjsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
 const app = express();
 const swaggerDocs = swaggerjsdoc(swaggerOptions);
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(cookies());
