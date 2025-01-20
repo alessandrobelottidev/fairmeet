@@ -1,6 +1,3 @@
-import { IEvent } from './event.interface';
-import { Document } from 'mongoose';
-
 export interface IPlace {
   title: string;
   address: string;
