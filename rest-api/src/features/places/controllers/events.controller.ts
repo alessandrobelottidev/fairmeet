@@ -101,20 +101,23 @@ export const deleteEventByID: RequestHandler = async (req, res, next) => {
   res.status(200).json(event);
 };
 
-export const getEventByCoordinates: RequestHandler[] = [
-  parsePagination({ maxLimit: 100 }),
-  parseFields(Event, {
-    allowedFields: ALLOWED_FIELDS,
-  }),
-  setCache({ timeout: 900 }),
-  executeQuery(Event, {
-    preQuery: async (query, req) => {
-      const { latitude, longitude } = req.query;
-      const event_coord = { type: 'Point', coordinates: [Number(longitude), Number(latitude)] };
-      query.where({ event_coord });
+export const getEventsByCoordinates = async (
+  latitude: number,
+  longitude: number,
+  radius: number,
+) => {
+  const event_list = await Event.find({
+    location: {
+      $nearSphere: {
+        $geometry: { type: 'Point', coordinates: [longitude, latitude] },
+        $maxDistance: radius,
+        $minDistance: 0,
+      },
     },
-  }),
-];
+  });
+
+  return event_list;
+};
 
 export default {
   getEvents,
@@ -122,5 +125,5 @@ export default {
   getEventById,
   patchEventByID,
   deleteEventByID,
-  getEventByCoordinates,
+  getEventsByCoordinates,
 };

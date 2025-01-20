@@ -72,25 +72,23 @@ export const deleteSpotByID: RequestHandler = async (req, res, next) => {
   res.status(200).json(spot);
 };
 
-export const getSpotByCoordinates: RequestHandler[] = [
-  parsePagination({ maxLimit: 100 }),
-  parseFields(Spot, {
-    allowedFields: ALLOWED_FIELDS,
-  }),
-  setCache({ timeout: 900 }),
-  executeQuery(Spot, {
-    preQuery: async (query, req) => {
-      const { latitude, longitude } = req.query;
-      query
-        .where('latitude')
-        .gte(Number(latitude) - 1)
-        .lte(Number(latitude) + 1)
-        .where('longitude')
-        .gte(Number(longitude) - 1)
-        .lte(Number(longitude) + 1);
+export const getSpotsByCoordinates = async (
+  latitude: number,
+  longitude: number,
+  radius: number,
+) => {
+  const spots_list = await Spot.find({
+    location: {
+      $nearSphere: {
+        $geometry: { type: 'Point', coordinates: [longitude, latitude] },
+        $maxDistance: radius,
+        $minDistance: 0,
+      },
     },
-  }),
-];
+  });
+
+  return spots_list;
+};
 
 export default {
   getSpots,
@@ -98,5 +96,5 @@ export default {
   getSpotById,
   patchSpotByID,
   deleteSpotByID,
-  getSpotByCoordinates,
+  getSpotsByCoordinates,
 };
