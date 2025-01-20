@@ -3,6 +3,4 @@ import e from 'express';
 
 const router = e.Router();
 
-router.route('/').get(controller.getPlacesByCoordinates);
-
 export default router;

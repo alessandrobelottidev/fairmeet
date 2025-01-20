@@ -1,4 +1,6 @@
-function calculateCentroid(coordinates: number[][]) {
+
+
+export function calculateCentroid(coordinates: number[][]) {
   let x = 0,
     y = 0,
     z = 0;
@@ -24,12 +26,7 @@ function calculateCentroid(coordinates: number[][]) {
   return [lon, lat];
 }
 
-// // Example usage
-// const coordinates = [
-//   [-73.935242, 40.73061], // New York
-//   [2.352222, 48.856613], // Paris
-//   [139.691711, 35.689487], // Tokyo
-// ];
 
-// const centroid = calculateCentroid(coordinates);
-// console.log('Centroid:', centroid); // Output: [longitude, latitude]
+export default{
+  calculateCentroid
+}

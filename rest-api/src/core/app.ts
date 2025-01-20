@@ -5,6 +5,7 @@ import meetings from '@features/meetings/routes/meeting.routes';
 import events from '@features/places/routes/events.routes';
 import places from '@features/places/routes/places.routes';
 import spots from '@features/places/routes/spots.routes';
+import recommend from '@features/recommend/routes/recommend.routes';
 import corsOptions from '@options/cors.options';
 import swaggerOptions from '@options/swagger.options';
 import cookies from 'cookie-parser';
@@ -53,6 +54,9 @@ app.use('/v1/users', groups);
 
 // Meetings feature
 app.use('/v1/meetings', meetings);
+
+// Recommend feature
+app.use('/v1/recommend', recommend);
 
 // Handle unregistered route for all HTTP Methods
 app.all('*', notFoundErrorHandler);

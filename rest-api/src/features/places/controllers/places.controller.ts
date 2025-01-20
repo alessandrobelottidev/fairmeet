@@ -3,8 +3,9 @@ import { getEventsByCoordinates } from './events.controller';
 import { getSpotsByCoordinates } from './spots.controller';
 import { RequestHandler } from 'express';
 
-export const getPlacesByCoordinates: RequestHandler = async (req, res, next) => {
-  const { latitude, longitude } = req.body;
+export const getPlacesByCoordinates = async (lat: number, long: number) => {
+  const latitude = lat;
+  const longitude = long;
   const radius = 10000.0; //equals to 10km
 
   const events_list = await getEventsByCoordinates(latitude, longitude, radius);
@@ -22,9 +23,9 @@ export const getPlacesByCoordinates: RequestHandler = async (req, res, next) => 
       return 1;
     }
   });
-  res.status(200).json(result);
+  return result;
 };
 
 export default {
-  getPlacesByCoordinates: getPlacesByCoordinates,
+  getPlacesByCoordinates,
 };
