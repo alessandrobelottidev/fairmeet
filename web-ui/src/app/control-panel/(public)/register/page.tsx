@@ -25,7 +25,7 @@ export default function ControlPanelRegisterPage() {
               </p>
               <a
                 href="mailto:business@fairmeet.com"
-                className="mt-2 block text-indigo-600 hover:text-indigo-500"
+                className="mt-2 block text-green-600 transition-all hover:text-green-500"
               >
                 business@fairmeet.com
               </a>
@@ -40,7 +40,7 @@ export default function ControlPanelRegisterPage() {
               </p>
               <a
                 href="mailto:government@fairmeet.com"
-                className="mt-2 block text-indigo-600 hover:text-indigo-500"
+                className="mt-2 block text-green-600 transition-all hover:text-green-500"
               >
                 government@fairmeet.com
               </a>
@@ -50,7 +50,7 @@ export default function ControlPanelRegisterPage() {
           <div className="text-center">
             <Link
               href="/control-panel/login"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              className="text-sm font-medium text-green-600 transition-all hover:text-green-500"
             >
               Already have an account? Sign in
             </Link>

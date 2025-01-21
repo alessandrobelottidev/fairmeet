@@ -29,8 +29,8 @@ export function AuthForm({
 }: AuthFormProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
+      <div className="max-w-md w-full bg-white rounded-lg shadow-sm border px-8 pb-6">
+        <div className="mb-8">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             {title}
           </h2>
@@ -49,10 +49,10 @@ export function AuthForm({
           </div>
         )}
 
-        <form action={action} className="mt-8 space-y-6">
-          <div className="rounded-md shadow-sm -space-y-px">
+        <form action={action} className="mt-8 space-y-4">
+          <div className="rounded-md shadow-sm">
             {fields.map((field, index) => (
-              <div key={field.name} className={index > 0 ? "mt-4" : ""}>
+              <div key={field.name} className={index > 0 ? "mt-2" : ""}>
                 <label htmlFor={field.name} className="sr-only">
                   {field.label}
                 </label>
@@ -61,7 +61,7 @@ export function AuthForm({
                   name={field.name}
                   type={field.type}
                   required={field.required !== false}
-                  className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                   placeholder={field.label}
                 />
               </div>

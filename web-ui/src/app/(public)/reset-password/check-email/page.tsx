@@ -14,7 +14,7 @@ export default function CheckEmailPage() {
           </p>
           <Link
             href="/login"
-            className="text-indigo-600 hover:text-indigo-500 font-medium"
+            className="text-green-600 transition-all hover:text-green-500 font-medium"
           >
             Return to login
           </Link>

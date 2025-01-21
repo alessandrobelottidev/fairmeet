@@ -37,7 +37,7 @@ export default async function RegisterPage() {
       <div className="text-center mt-4">
         <Link
           href="/login"
-          className="text-sm text-indigo-600 hover:text-indigo-500"
+          className="text-sm text-green-600 transition-all hover:text-green-500"
         >
           Already have an account? Sign in
         </Link>
