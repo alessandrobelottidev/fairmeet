@@ -3,7 +3,6 @@ import auth from '@features/auth/routes/auth.routes';
 import groups from '@features/groups/routes/group.routes';
 import meetings from '@features/meetings/routes/meeting.routes';
 import events from '@features/places/routes/events.routes';
-import places from '@features/places/routes/places.routes';
 import spots from '@features/places/routes/spots.routes';
 import recommend from '@features/recommend/routes/recommend.routes';
 import corsOptions from '@options/cors.options';
@@ -45,7 +44,6 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/v1/auth', auth);
 
 // Places feature
-app.use('/v1/places', places);
 app.use('/v1/events', events);
 app.use('/v1/spots', spots);
 
