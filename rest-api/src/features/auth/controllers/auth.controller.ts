@@ -268,9 +268,10 @@ const resetPassword: RequestHandler = async (req, res, next) => {
       .digest('hex');
 
     const user = await UserModel.findOne({
-      resetpasswordtoken: resetTokenHash,
-      resetpasswordtokenexpiry: { $gt: Date.now() },
+      resetPasswordToken: resetTokenHash,
+      resetPasswordTokenExpiry: { $gt: Date.now() },
     });
+    console.log(user);
     if (!user) throw new BadRequestError('The reset link is invalid');
 
     user.password = req.body.password; // Will be hashed by mongoose middleware
