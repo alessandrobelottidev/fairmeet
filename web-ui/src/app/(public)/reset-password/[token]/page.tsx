@@ -19,32 +19,36 @@ export default async function ResetPasswordTokenPage({
   };
 
   return (
-    <AuthForm
-      title="Set new password"
-      subtitle="Enter your new password below"
-      fields={[
-        {
-          name: "password",
-          label: "New password",
-          type: "password",
-        },
-        {
-          name: "passwordConfirm",
-          label: "Confirm new password",
-          type: "password",
-        },
-      ]}
-      action={resetPasswordWithToken}
-      submitText="Reset password"
-    >
-      <div className="text-center mt-4">
-        <Link
-          href="/login"
-          className="text-sm text-green-600 transition-all hover:text-green-500"
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white rounded-lg shadow-sm border px-8 pb-6">
+        <AuthForm
+          title="Set new password"
+          subtitle="Enter your new password below"
+          fields={[
+            {
+              name: "password",
+              label: "New password",
+              type: "password",
+            },
+            {
+              name: "passwordConfirm",
+              label: "Confirm new password",
+              type: "password",
+            },
+          ]}
+          action={resetPasswordWithToken}
+          submitText="Reset password"
         >
-          Back to login
-        </Link>
+          <div className="text-center mt-4">
+            <Link
+              href="/login"
+              className="text-sm text-green-600 transition-all hover:text-green-500"
+            >
+              Back to login
+            </Link>
+          </div>
+        </AuthForm>
       </div>
-    </AuthForm>
+    </div>
   );
 }

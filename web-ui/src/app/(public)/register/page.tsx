@@ -11,37 +11,41 @@ export default async function RegisterPage() {
   }
 
   return (
-    <AuthForm
-      title="Create an account"
-      subtitle="Get started with FairMeet"
-      fields={[
-        {
-          name: "handle",
-          label: "Username",
-          type: "text",
-        },
-        {
-          name: "email",
-          label: "Email address",
-          type: "email",
-        },
-        {
-          name: "password",
-          label: "Password",
-          type: "password",
-        },
-      ]}
-      action={register}
-      submitText="Sign up"
-    >
-      <div className="text-center mt-4">
-        <Link
-          href="/login"
-          className="text-sm text-green-600 transition-all hover:text-green-500"
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white rounded-lg shadow-sm border px-8 pb-6">
+        <AuthForm
+          title="Create an account"
+          subtitle="Get started with FairMeet"
+          fields={[
+            {
+              name: "handle",
+              label: "Username",
+              type: "text",
+            },
+            {
+              name: "email",
+              label: "Email address",
+              type: "email",
+            },
+            {
+              name: "password",
+              label: "Password",
+              type: "password",
+            },
+          ]}
+          action={register}
+          submitText="Sign up"
         >
-          Already have an account? Sign in
-        </Link>
+          <div className="text-center mt-4">
+            <Link
+              href="/login"
+              className="text-sm text-green-600 transition-all hover:text-green-500"
+            >
+              Already have an account? Sign in
+            </Link>
+          </div>
+        </AuthForm>
       </div>
-    </AuthForm>
+    </div>
   );
 }

@@ -28,53 +28,51 @@ export function AuthForm({
   children,
 }: AuthFormProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-sm border px-8 pb-6">
-        <div className="mb-8">
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="mt-2 text-center text-sm text-gray-600">{subtitle}</p>
-          )}
-        </div>
+    <>
+      <div className="mb-6">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="mt-2 text-center text-sm text-gray-600">{subtitle}</p>
+        )}
+      </div>
 
-        {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4">
-            <div className="flex">
-              <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4">
+          <div className="flex">
+            <div className="ml-3">
+              <p className="text-sm text-red-700">{error}</p>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        <form action={action} className="mt-8 space-y-4">
-          <div className="rounded-md shadow-sm">
-            {fields.map((field, index) => (
-              <div key={field.name} className={index > 0 ? "mt-2" : ""}>
-                <label htmlFor={field.name} className="sr-only">
-                  {field.label}
-                </label>
-                <input
-                  id={field.name}
-                  name={field.name}
-                  type={field.type}
-                  required={field.required !== false}
-                  className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-                  placeholder={field.label}
-                />
-              </div>
-            ))}
-          </div>
+      <form action={action} className="space-y-4">
+        <div className="rounded-md shadow-sm">
+          {fields.map((field, index) => (
+            <div key={field.name} className={index > 0 ? "mt-2" : ""}>
+              <label htmlFor={field.name} className="sr-only">
+                {field.label}
+              </label>
+              <input
+                id={field.name}
+                name={field.name}
+                type={field.type}
+                required={field.required !== false}
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                placeholder={field.label}
+              />
+            </div>
+          ))}
+        </div>
 
-          <div>
-            <SubmitButton>{submitText}</SubmitButton>
-          </div>
+        <div>
+          <SubmitButton>{submitText}</SubmitButton>
+        </div>
 
-          {children}
-        </form>
-      </div>
-    </div>
+        {children}
+      </form>
+    </>
   );
 }

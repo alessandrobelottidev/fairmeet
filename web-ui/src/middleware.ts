@@ -41,8 +41,6 @@ async function validateUser(request: NextRequest) {
       credentials: "include",
     });
 
-    console.log("STATUS", response.status);
-
     // If token expired (401), try to refresh
     if (response.status === 401) {
       const refreshResponse = await fetch(
@@ -55,8 +53,6 @@ async function validateUser(request: NextRequest) {
           credentials: "include",
         }
       );
-
-      console.log("REFRESH RESPONSE STATUS", refreshResponse.status);
 
       // If refresh failed, user needs to login again
       if (!refreshResponse.ok) return null;

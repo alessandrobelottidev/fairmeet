@@ -145,6 +145,32 @@ export async function logout() {
   redirect("/login");
 }
 
+export async function logoutControlPanel() {
+  const cookieStore = cookies();
+  const accessToken = (await cookieStore).get("accessToken")?.value;
+  const origin = (await headers()).get("origin");
+
+  const response = await fetch(`${API_URL}/v1/auth/logout`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Origin: origin || "",
+    },
+    credentials: "include",
+  });
+
+  // Handle any cookies from the response
+  handleSetCookies(response);
+
+  // Remove access token
+  (
+    await // Remove access token
+    cookieStore
+  ).delete("accessToken");
+
+  redirect("/control-panel/login");
+}
+
 export async function requestPasswordReset(formData: FormData) {
   const email = formData.get("email") as string;
   const origin = (await headers()).get("origin");
