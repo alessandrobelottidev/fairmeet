@@ -18,17 +18,7 @@ const ALLOWED_FIELDS = [
 export const getSpots: RequestHandler[] = [
   parsePagination({ maxLimit: 100 }),
   parseFields(Spot, {
-    allowedFields: [
-      'title',
-      'address',
-      'description',
-      'location',
-      'abstract',
-      'email',
-      'socialMediaHandles',
-      'featuredImageUrl',
-      'updated_at',
-    ],
+    allowedFields: ALLOWED_FIELDS,
   }),
   setCache({ timeout: 900 }),
   executeQuery(Spot), // Most basic case - no special query modifications needed

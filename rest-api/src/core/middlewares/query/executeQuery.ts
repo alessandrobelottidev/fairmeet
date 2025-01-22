@@ -8,9 +8,8 @@ export const executeQuery = (model: Model<any>, hooks: QueryHooks = {}): Request
   return async (req: PaginatedRequest & FieldSelectionRequest, res, next) => {
     try {
       const { pagination, selectedFields } = req;
-
-      // Don't require pagination for findById operations
       let query = model.find();
+      let countQuery;
 
       if (pagination) {
         const { skip, limit, sortBy, order } = pagination;
@@ -24,30 +23,28 @@ export const executeQuery = (model: Model<any>, hooks: QueryHooks = {}): Request
         query = query.select(selectedFields.join(' '));
       }
 
+      let additionalQuery = {};
       if (hooks.preQuery) {
-        await hooks.preQuery(query, req);
+        const result = await hooks.preQuery(query, req);
+        if (result?.additionalQuery) {
+          additionalQuery = result.additionalQuery;
+          countQuery = model.countDocuments(additionalQuery);
+        }
       }
 
-      // Handle both single document and list scenarios
-      let documents;
-      let totalDocs;
-
-      if (pagination) {
-        [documents, totalDocs] = await Promise.all([query.lean(), model.countDocuments()]);
-      } else {
-        documents = await query.lean();
-        totalDocs = Array.isArray(documents) ? documents.length : 1;
+      if (!countQuery) {
+        countQuery = model.countDocuments(additionalQuery);
       }
+
+      const [documents, totalDocs] = await Promise.all([query.lean(), countQuery]);
 
       const finalData = hooks.postQuery ? await hooks.postQuery(documents) : documents;
 
       if (!pagination) {
-        // For non-paginated requests (like getById), return the data directly
         res.status(200).json(finalData);
         return;
       }
 
-      // For paginated requests, return the standard paginated response
       const totalPages = Math.ceil(totalDocs / pagination.limit);
       const hasNextPage = pagination.page < totalPages - 1;
       const hasPrevPage = pagination.page > 0;
@@ -68,7 +65,7 @@ export const executeQuery = (model: Model<any>, hooks: QueryHooks = {}): Request
 
       res.status(200).json(response);
     } catch (error) {
-      console.error('executeQuery error:', error); // Add this for debugging
+      console.error('executeQuery error:', error);
       next(error);
     }
   };

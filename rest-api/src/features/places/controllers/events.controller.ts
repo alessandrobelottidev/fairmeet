@@ -24,8 +24,14 @@ export const getEvents: RequestHandler[] = [
   }),
   setCache({ timeout: 900 }),
   executeQuery(Event, {
-    preQuery: async (query) => {
-      query.where('startDateTimeZ').gte(new Date()); // Using where/gte for more consistent syntax
+    preQuery: async (query, req) => {
+      const showFutureOnly = req.query.futureOnly === 'true';
+
+      if (showFutureOnly) {
+        const futureDate = new Date();
+        query.where('startDateTimeZ').gte(futureDate);
+        return { additionalQuery: { startDateTimeZ: { $gte: futureDate } } };
+      }
     },
     postQuery: async (events) => {
       return events.map(
