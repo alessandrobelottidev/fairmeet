@@ -16,7 +16,7 @@ export default async function ProtectedLayout({
                 <span className="text-xl font-bold">FairMeet</span>
               </div>
             </div>
-            <form action={logout} method="POST" className="flex items-center">
+            <form action={logout} className="flex items-center">
               <button
                 type="submit"
                 className="text-gray-600 hover:text-gray-900"
