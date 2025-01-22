@@ -12,7 +12,7 @@ export default async function ControlPanelLayout({
       <section className="w-64">
         <Sidebar />
       </section>
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</main>
+      <main className="py-6 sm:px-6 lg:px-8 w-full">{children}</main>
     </div>
   );
 }
