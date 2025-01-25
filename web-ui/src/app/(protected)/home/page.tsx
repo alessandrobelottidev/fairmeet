@@ -1,3 +1,4 @@
+import { Bottombar } from "@/components/bottombar/Bottombar";
 import { getCurrentUser } from "@/lib/auth";
 
 export default async function HomePage() {
@@ -12,6 +13,8 @@ export default async function HomePage() {
         This is your FairMeet dashboard. Here you'll be able to manage your
         meetings and interactions.
       </p>
+
+      {/* <Bottombar /> */}
     </div>
   );
 }

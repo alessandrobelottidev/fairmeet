@@ -31,7 +31,8 @@ function calculateCentroid(coordinates: number[][]) {
 
 export const getRecommendationsByUsersCoordinates: RequestHandler = async (req, res, next) => {
   const list_coordinates = req.body.coordinates;
-  const radius = req.body.preferences.maxDistance * 1000; //conversion km to m
+  // const radius = req.body.preferences.maxDistance * 1000; //conversion km to m
+  const radius = 10000;
 
   //Least distant common point
   const [latitude, longitude] = calculateCentroid(list_coordinates);
@@ -46,7 +47,7 @@ export const getRecommendationsByUsersCoordinates: RequestHandler = async (req, 
     groupSize: req.body.groupSize,
     timeOfDay: req.body.timeOfDay,
     preferences: {
-      maxDistance: req.body.preferences.maxDistance, // in kilometers
+      maxDistance: radius, // in kilometers CHANGE this to the preferences of the user
       preferIndoor: req.body.preferences.preferIndoor,
       preferOutdoor: req.body.preferences.preferOutdoor,
       activityType: req.body.preferences.activityType,

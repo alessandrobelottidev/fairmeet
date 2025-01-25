@@ -1,3 +1,5 @@
+import { Bottombar } from "@/components/bottombar/Bottombar";
+import NavButton from "@/components/bottombar/NavButton";
 import { logout } from "@/lib/auth";
 import type { ReactNode } from "react";
 
@@ -28,6 +30,7 @@ export default async function ProtectedLayout({
         </div>
       </nav>
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</main>
+      <Bottombar />
     </div>
   );
 }
