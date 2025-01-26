@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { ReceiptCent } from "lucide-react";
@@ -50,10 +50,19 @@ export default function EventsPage() {
     },
   };
 
+  useEffect(() => {
+    async () => {
+      const response = await fetch(`http://localhost:3001/v1/recommend`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ coordinates: data.coordinates }),
+      });
+
+      console.log(response);
+    };
+  }, []);
+
   console.log(data);
-  // const response = fetch(
-  //   "http://localhost:3001/v1/recommend?${data.toString()}"
-  // );
 
   // Mock data for events
   const events = [
