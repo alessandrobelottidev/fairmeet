@@ -6,8 +6,6 @@ import Link from "next/link";
 
 export default function EventsPage() {
   const {
-    peopleNumber,
-    friends,
     recommendations,
     selectedEvents,
     fetchRecommendations,

@@ -11,7 +11,6 @@ interface FriendLocation {
 interface MeetUpData {
   coordinates: number[][];
   groupSize: number;
-  timeOfDay: "morning" | "afternoon" | "evening";
   preferences?: {
     maxDistance?: number; // in kilometers
     preferIndoor?: boolean;
@@ -157,7 +156,6 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
     const data: MeetUpData = {
       coordinates: positionsFriends ? positionsFriends : [[]],
       groupSize: peopleNumber,
-      timeOfDay: "morning",
       preferences: {
         maxDistance: 10, // in kilometers
         preferIndoor: false,
