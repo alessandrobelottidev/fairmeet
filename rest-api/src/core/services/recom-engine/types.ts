@@ -15,7 +15,6 @@ export interface RecommendationOptions {
   currentTime: Date;
   originCoordinates: [number, number];
   groupSize: number;
-  timeOfDay: 'morning' | 'afternoon' | 'evening';
   preferences?: {
     maxDistance?: number; // in kilometers
     preferIndoor?: boolean;

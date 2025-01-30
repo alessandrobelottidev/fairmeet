@@ -21,7 +21,6 @@ const router = e.Router();
  *             required:
  *               - coordinates
  *               - groupSize
- *               - timeOfDay
  *               - preferences
  *             properties:
  *               coordinates:
@@ -39,11 +38,6 @@ const router = e.Router();
  *                 minimum: 1
  *                 description: Number of people in the group
  *                 example: 3
- *               timeOfDay:
- *                 type: string
- *                 enum: [morning, afternoon, evening, night]
- *                 description: Time of day for the recommendation
- *                 example: "afternoon"
  *               preferences:
  *                 type: object
  *                 required:

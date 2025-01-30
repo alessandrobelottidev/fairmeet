@@ -45,7 +45,6 @@ export const getRecommendationsByUsersCoordinates: RequestHandler = async (req, 
     currentTime: new Date(),
     originCoordinates: [latitude, longitude],
     groupSize: req.body.groupSize,
-    timeOfDay: req.body.timeOfDay,
     preferences: {
       maxDistance: radius, // in kilometers CHANGE this to the preferences of the user
       preferIndoor: req.body.preferences.preferIndoor,
