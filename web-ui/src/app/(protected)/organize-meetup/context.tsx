@@ -1,0 +1,230 @@
+"use client";
+import React, { createContext, useContext, useState } from "react";
+
+interface FriendLocation {
+  id: number;
+  name: string;
+  position: string;
+}
+
+//create the request based on user preferences
+interface MeetUpData {
+  coordinates: number[][];
+  groupSize: number;
+  timeOfDay: "morning" | "afternoon" | "evening";
+  preferences?: {
+    maxDistance?: number; // in kilometers
+    preferIndoor?: boolean;
+    preferOutdoor?: boolean;
+    activityType?: "active" | "relaxed";
+  };
+}
+
+interface responseData {
+  place: {
+    location: {
+      type: string;
+      coordinates: number[];
+    };
+    _id: string;
+    title: string;
+    address: string;
+    description: string;
+    updated_at: Date;
+    __v: 0;
+  };
+  score: number;
+  factors: {
+    timeScore: number;
+    locationScore: number;
+    amenitiesScore: number;
+    popularityScore: number;
+  };
+}
+
+interface MeetUpContextType {
+  peopleNumber: number; // This cannot be undefined because you assign a default value
+  friends: FriendLocation[] | undefined; // Friends can be undefined initially
+  // meetup: MeetUpData | undefined;
+  recommendations: responseData[];
+  selectedEvents: Set<responseData>;
+  groupName: string;
+  updateNumPeople: (newNum: number) => void;
+  initFriends: () => void;
+  updateFriendName: (
+    id: number,
+    field: keyof FriendLocation,
+    value: string
+  ) => void;
+  updateFriendPosition: (
+    id: number,
+    field: keyof FriendLocation,
+    value: string
+  ) => void;
+  fetchRecommendations: () => void;
+  toggleEventSelection: (event: responseData) => void;
+  updateGroupName: (name: string) => void;
+}
+
+// Create the context
+export const MeetUpContext = createContext<MeetUpContextType>({
+  peopleNumber: 3,
+  friends: undefined, // Explicitly set this to `undefined`,
+  // meetup: undefined,
+  recommendations: [],
+  selectedEvents: new Set<responseData>(),
+  groupName: "",
+  updateNumPeople: () => {
+    console.warn("updateNumPeople is not implemented");
+  },
+  initFriends: () => {
+    console.warn("initFriends is not implemented");
+  },
+  updateFriendName: () => {
+    console.warn("updateFriendName is not implemented");
+  },
+  updateFriendPosition: () => {
+    console.warn("updateFriendPosition is not implemented");
+  },
+  fetchRecommendations: () => {
+    console.warn("fetchRecommendations is not implemented");
+  },
+  // updateMeetUpData: (coordinates: number[][]) => {
+  //   console.warn("updateMeetUpData is not implemented");
+  // },
+  toggleEventSelection: (event: responseData) => {
+    console.warn("toggleEventSelection is not implemented");
+  },
+  updateGroupName: (name: string) => {
+    console.warn("updateGroupName is not implemented");
+  },
+});
+
+// Create the provider component
+export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
+  // Define your shared state variables here
+  const [peopleNumber, setNumPeople] = useState(3);
+  const [friends, setFriends] = useState<FriendLocation[] | undefined>();
+  const [recommendations, setRecommendations] = useState([]);
+  const [selectedEvents, setSelectedEvents] = useState(new Set<responseData>());
+  const [groupName, setGroupName] = useState("");
+
+  const initFriends = () => {
+    setFriends(
+      Array.from({ length: peopleNumber }, (_, i) => ({
+        id: i + 1, // Crescent IDs starting from 1
+        name: "", // Empty string for name
+        position: "", // Empty number for position
+      }))
+    );
+  };
+
+  // Add any functions to modify the state
+  const updateNumPeople = (newNumPeople: number): void => {
+    setNumPeople(newNumPeople);
+    initFriends();
+  };
+
+  const updateFriendName = (
+    id: number,
+    field: keyof FriendLocation,
+    value: string
+  ) => {
+    setFriends(
+      friends?.map((friend) =>
+        friend.id === id ? { ...friend, [field]: value } : friend
+      )
+    );
+  };
+
+  const updateFriendPosition = (
+    id: number,
+    field: keyof FriendLocation,
+    value: string
+  ) => {
+    //here it need some middleware that can change the text address in coordinates
+    setFriends(
+      friends?.map((friend) =>
+        friend.id === id ? { ...friend, [field]: value } : friend
+      )
+    );
+  };
+
+  const fetchRecommendations = async () => {
+    const positionsFriends = friends?.map((coordinates) =>
+      coordinates.position.split(",").map(Number)
+    );
+    const data: MeetUpData = {
+      coordinates: positionsFriends ? positionsFriends : [[]],
+      groupSize: peopleNumber,
+      timeOfDay: "morning",
+      preferences: {
+        maxDistance: 10, // in kilometers
+        preferIndoor: false,
+        preferOutdoor: false,
+        activityType: "relaxed",
+      },
+    };
+
+    // console.log(data);
+
+    try {
+      const response = await fetch("http://localhost:3001/v1/recommend", {
+        method: "POST", // Changed to POST since body in GET is unconventional
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setRecommendations(result); // Save the recommendations to state
+    } catch (error: any) {
+      console.error("Failed to fetch recommendations:", error);
+    }
+  };
+
+  const toggleEventSelection = (event: responseData) => {
+    setSelectedEvents((prev) => {
+      const newSelection = new Set(prev);
+      if (newSelection.has(event)) {
+        newSelection.delete(event);
+      } else {
+        newSelection.add(event);
+      }
+      console.log(newSelection);
+      return newSelection;
+    });
+  };
+
+  const updateGroupName = async (name: string) => {
+    setGroupName(name);
+  };
+
+  const value: MeetUpContextType = {
+    // State
+    peopleNumber,
+    friends,
+    recommendations,
+    selectedEvents,
+    groupName,
+
+    // Functions
+    updateNumPeople,
+    initFriends,
+    updateFriendName,
+    updateFriendPosition,
+    fetchRecommendations,
+    toggleEventSelection,
+    updateGroupName,
+  };
+
+  // Create the value object that will be shared
+  return (
+    <MeetUpContext.Provider value={value}>{children}</MeetUpContext.Provider>
+  );
+};

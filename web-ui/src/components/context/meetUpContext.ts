@@ -1,7 +1,7 @@
-import { createContext } from "react";
+// import { createContext } from "react";
 
-const MeetUpContext = createContext({
-  peopleNumber: 0,
-});
+// const MeetUpContext = createContext({
+//   peopleNumber: 0,
+// });
 
-export default MeetUpContext;
+// export default MeetUpContext;

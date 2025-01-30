@@ -1,3 +1,4 @@
+import { validateRecommendSchema } from '../middleware/recommend.middleware';
 import controller from '@features/recommend/controllers/recommend.controllers';
 import e from 'express';
 
@@ -133,6 +134,6 @@ const router = e.Router();
  *       500:
  *         description: Internal server error
  */
-router.route('/').get(controller.getRecommendationsByUsersCoordinates);
+router.route('/').post(validateRecommendSchema, controller.getRecommendationsByUsersCoordinates);
 
 export default router;

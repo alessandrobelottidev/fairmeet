@@ -1,52 +1,25 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-
-interface FriendLocation {
-  id: number;
-  name: string;
-  position: text;
-}
+import { MeetUpContext } from "../context";
 
 const GetPosition = () => {
-  const searchParams = useSearchParams();
-  const people = searchParams.get("people");
+  const { friends, initFriends, updateFriendName, updateFriendPosition } =
+    useContext(MeetUpContext);
 
-  // Initialize state with an array of FriendLocation objects
-  const [friends, setFriends] = useState<FriendLocation[]>(
-    Array.from({ length: people }, (_, i) => ({
-      id: i + 1, // Crescent IDs starting from 1
-      name: "", // Empty string for name
-      position: "", // Empty number for position
-    }))
-  );
+  // // Initialize state with an array of FriendLocation objects
+  // const [friends, setFriends] = useState<FriendLocation[]>(
+  //   Array.from({ length: numPeople }, (_, i) => ({
+  //     id: i + 1, // Crescent IDs starting from 1
+  //     name: "", // Empty string for name
+  //     position: "", // Empty number for position
+  //   }))
+  // );
 
-  const updateFriendName = (
-    id: number,
-    field: keyof FriendLocation,
-    value: string
-  ) => {
-    setFriends(
-      friends.map((friend) =>
-        friend.id === id ? { ...friend, [field]: value } : friend
-      )
-    );
-  };
-
-  const updateFriendPosition = (
-    id: number,
-    field: keyof FriendLocation,
-    value: string
-  ) => {
-    //here it need some middleware that can change the text address in coordinates
-    setFriends(
-      friends.map((friend) =>
-        friend.id === id ? { ...friend, [field]: value } : friend
-      )
-    );
-  };
+  useEffect(() => {
+    initFriends();
+  }, []); // Empty dependency array ensures this runs once
 
   return (
     <div className="min-h-screen bg-white p-6 flex flex-col">
@@ -72,7 +45,7 @@ const GetPosition = () => {
       </div>
 
       <div className="flex flex-col gap-8">
-        {friends.map((friend, index) => (
+        {friends?.map((friend, index) => (
           <div key={friend.id}>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -111,12 +84,7 @@ const GetPosition = () => {
         ))}
       </div>
 
-      <Link
-        href={{
-          pathname: "/organize-meetup/third-step",
-          query: { friends: JSON.stringify(friends), people: people },
-        }}
-      >
+      <Link href="/organize-meetup/step-3">
         <button className="mt-auto mx-4 bg-black text-white rounded-full py-3 text-sm font-medium">
           CERCA POSTO DI INCONTRO
         </button>
