@@ -44,10 +44,10 @@ interface responseData {
 interface MeetUpContextType {
   peopleNumber: number; // This cannot be undefined because you assign a default value
   friends: FriendLocation[] | undefined; // Friends can be undefined initially
-  // meetup: MeetUpData | undefined;
   recommendations: responseData[];
   selectedEvents: Set<responseData>;
   groupName: string;
+
   updateNumPeople: (newNum: number) => void;
   initFriends: () => void;
   updateFriendName: (
@@ -60,9 +60,13 @@ interface MeetUpContextType {
     field: keyof FriendLocation,
     value: string
   ) => void;
-  fetchRecommendations: () => void;
+  fetchRecommendations: (positions: number[][], peopleNumber: number) => void;
   toggleEventSelection: (event: responseData) => void;
   updateGroupName: (name: string) => void;
+
+  userCoordinates: number[];
+  userRecommendations: responseData[];
+  updateUserCoordinates: (latitude: number, longitude: number) => void;
 }
 
 // Create the context
@@ -85,7 +89,7 @@ export const MeetUpContext = createContext<MeetUpContextType>({
   updateFriendPosition: () => {
     console.warn("updateFriendPosition is not implemented");
   },
-  fetchRecommendations: () => {
+  fetchRecommendations: (positions: number[][], peopleNumber: number) => {
     console.warn("fetchRecommendations is not implemented");
   },
   // updateMeetUpData: (coordinates: number[][]) => {
@@ -97,6 +101,12 @@ export const MeetUpContext = createContext<MeetUpContextType>({
   updateGroupName: (name: string) => {
     console.warn("updateGroupName is not implemented");
   },
+
+  userCoordinates: [],
+  userRecommendations: [],
+  updateUserCoordinates: (latitude: number, longitude: number) => {
+    console.warn("updateUserCoordinate is not implemented");
+  },
 });
 
 // Create the provider component
@@ -107,6 +117,8 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
   const [recommendations, setRecommendations] = useState([]);
   const [selectedEvents, setSelectedEvents] = useState(new Set<responseData>());
   const [groupName, setGroupName] = useState("");
+  const [userCoordinates, setUserCoordinates] = useState([0, 0]);
+  const [userRecommendations, setUserRecommendations] = useState([]);
 
   const initFriends = () => {
     setFriends(
@@ -149,12 +161,12 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
     );
   };
 
-  const fetchRecommendations = async () => {
-    const positionsFriends = friends?.map((coordinates) =>
-      coordinates.position.split(",").map(Number)
-    );
+  const fetchRecommendations = async (
+    positions: number[][],
+    peopleNumber: number
+  ) => {
     const data: MeetUpData = {
-      coordinates: positionsFriends ? positionsFriends : [[]],
+      coordinates: positions,
       groupSize: peopleNumber,
       preferences: {
         maxDistance: 10, // in kilometers
@@ -180,7 +192,11 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       const result = await response.json();
-      setRecommendations(result); // Save the recommendations to state
+      if (peopleNumber == 0) {
+        setUserRecommendations(result);
+      } else {
+        setRecommendations(result); // Save the recommendations to state
+      }
     } catch (error: any) {
       console.error("Failed to fetch recommendations:", error);
     }
@@ -203,8 +219,12 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
     setGroupName(name);
   };
 
+  const updateUserCoordinates = (latitude: number, longitude: number) => {
+    setUserCoordinates([latitude, longitude]);
+  };
+
   const value: MeetUpContextType = {
-    // State
+    // State for Groups
     peopleNumber,
     friends,
     recommendations,
@@ -219,6 +239,11 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
     fetchRecommendations,
     toggleEventSelection,
     updateGroupName,
+
+    // State for user
+    userCoordinates,
+    userRecommendations,
+    updateUserCoordinates,
   };
 
   // Create the value object that will be shared

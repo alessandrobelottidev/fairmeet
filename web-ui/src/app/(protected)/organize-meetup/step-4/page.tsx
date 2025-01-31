@@ -7,11 +7,11 @@ export default function CreateGroupPage() {
   const router = useRouter();
   const { groupName, updateGroupName } = useContext(MeetUpContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     if (groupName.trim()) {
       // Handle group creation logic here
-      router.push("/organize-meetup/step-5"); // Redirect to success page after creation
+      router.push("/home/chat"); // Redirect to success page after creation
     }
   };
 

@@ -23,7 +23,7 @@ const GetPosition = () => {
 
   return (
     <div className="min-h-screen bg-white p-6 flex flex-col">
-      <Link href="/organize-meetup/first-step">
+      <Link href="/organize-meetup/step-1">
         <button className="mb-12">
           <ArrowLeft size={24} />
         </button>

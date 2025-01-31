@@ -6,14 +6,22 @@ import Link from "next/link";
 
 export default function EventsPage() {
   const {
+    peopleNumber,
     recommendations,
     selectedEvents,
+    friends,
     fetchRecommendations,
     toggleEventSelection,
   } = useContext(MeetUpContext);
 
   useEffect(() => {
-    fetchRecommendations();
+    //is possible that friends is undefined
+    if (friends) {
+      const positionsFriends = friends.map((coordinates) =>
+        coordinates.position.split(",").map(Number)
+      );
+      fetchRecommendations(positionsFriends, peopleNumber);
+    }
   }, []);
 
   return (
