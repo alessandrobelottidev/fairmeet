@@ -37,5 +37,6 @@ export default {
     './src/features/auth/routes/*.ts',
     './src/features/groups/routes/*.ts',
     './src/features/meetings/routes/*.ts',
+    './src/features/recommend/routes/*.ts',
   ],
 };
