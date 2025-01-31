@@ -20,7 +20,7 @@ function getRedirectPath(role: UserRole): string {
     case "gov_entity":
       return "/control-panel";
     case "basic":
-      return "/home";
+      return "/map";
     default:
       return "/login";
   }
