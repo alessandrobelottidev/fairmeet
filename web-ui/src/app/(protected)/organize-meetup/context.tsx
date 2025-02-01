@@ -60,6 +60,8 @@ interface MeetUpContextType {
     field: keyof FriendLocation,
     value: string
   ) => void;
+  removeFriend: (id: number) => void;
+  addFriend: () => void;
   fetchRecommendations: (positions: number[][], peopleNumber: number) => void;
   toggleEventSelection: (event: responseData) => void;
   updateGroupName: (name: string) => void;
@@ -86,9 +88,16 @@ export const MeetUpContext = createContext<MeetUpContextType>({
   updateFriendName: () => {
     console.warn("updateFriendName is not implemented");
   },
+  removeFriend: (id: number) => {
+    console.warn("removeFriend is not implemented");
+  },
+  addFriend: () => {
+    console.warn("updateFriendPosition is not implemented");
+  },
   updateFriendPosition: () => {
     console.warn("updateFriendPosition is not implemented");
   },
+
   fetchRecommendations: (positions: number[][], peopleNumber: number) => {
     console.warn("fetchRecommendations is not implemented");
   },
@@ -113,7 +122,9 @@ export const MeetUpContext = createContext<MeetUpContextType>({
 export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
   // Define your shared state variables here
   const [peopleNumber, setNumPeople] = useState(3);
-  const [friends, setFriends] = useState<FriendLocation[] | undefined>();
+  const [friends, setFriends] = useState([
+    { id: 1, name: "", position: "" },
+  ] as FriendLocation[]);
   const [recommendations, setRecommendations] = useState([]);
   const [selectedEvents, setSelectedEvents] = useState(new Set<responseData>());
   const [groupName, setGroupName] = useState("");
@@ -122,7 +133,7 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
 
   const initFriends = () => {
     setFriends(
-      Array.from({ length: peopleNumber }, (_, i) => ({
+      Array.from({ length: friends.length }, (_, i) => ({
         id: i + 1, // Crescent IDs starting from 1
         name: "", // Empty string for name
         position: "", // Empty number for position
@@ -155,10 +166,28 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
   ) => {
     //here it need some middleware that can change the text address in coordinates
     setFriends(
-      friends?.map((friend) =>
+      friends.map((friend) =>
         friend.id === id ? { ...friend, [field]: value } : friend
       )
     );
+  };
+
+  const removeFriend = (id: number) => {
+    // serve almeno un amico per creare un gruppo di incontro
+    if (friends.length > 1) {
+      setFriends(friends.filter((friend) => friend.id !== id));
+    }
+  };
+
+  const addFriend = () => {
+    setFriends([
+      ...friends,
+      {
+        id: friends.length + 1,
+        name: "",
+        position: "",
+      },
+    ]);
   };
 
   const fetchRecommendations = async (
@@ -236,6 +265,8 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
     initFriends,
     updateFriendName,
     updateFriendPosition,
+    addFriend,
+    removeFriend,
     fetchRecommendations,
     toggleEventSelection,
     updateGroupName,
