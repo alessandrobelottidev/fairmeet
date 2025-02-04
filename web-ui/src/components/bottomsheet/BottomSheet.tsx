@@ -71,7 +71,7 @@ const BottomSheet = () => {
             )}
 
             {/* Spacer to ensure full scrollability */}
-            <div className="h-20 w-full"></div>
+            <div className="h-2 w-full"></div>
           </div>
         )}
       </div>

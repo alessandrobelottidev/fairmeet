@@ -22,7 +22,7 @@ const NavButton = ({ isActive, goTo, icon: Icon, label }: NavButtonProps) => {
       } focus:outline-none transition-colors duration-200`}
     >
       <Icon size={24} />
-      <span className="text-xs mt-1">{label}</span>
+      <span className="text-xs">{label}</span>
     </button>
   );
 };
