@@ -1,5 +1,3 @@
-import NavButton from "@/components/bottombar/NavButton";
-import { logout } from "@/lib/auth";
 import type { ReactNode } from "react";
 import { MeetUpProvider } from "./context";
 

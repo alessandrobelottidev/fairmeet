@@ -1,5 +1,4 @@
 import { Sidebar } from "@/components/sidebar/Sidebar";
-import { logout } from "@/lib/auth";
 import type { ReactNode } from "react";
 
 export default async function ControlPanelLayout({

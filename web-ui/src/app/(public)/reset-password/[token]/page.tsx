@@ -11,10 +11,7 @@ export default async function ResetPasswordTokenPage({
 
   const resetPasswordWithToken = async (formData: FormData) => {
     "use server";
-    formData.append(
-      "token",
-      "jxmlvlLKT-S2eZJJk8Ll7a5qHCs+a4cc3893c71e16f477e2"
-    );
+    formData.append("token", token);
     await resetPassword(formData);
   };
 

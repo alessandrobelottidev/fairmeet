@@ -7,21 +7,13 @@ export default function CreateGroupPage() {
   const router = useRouter();
   const { groupName, updateGroupName } = useContext(MeetUpContext);
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    if (groupName.trim()) {
-      // Handle group creation logic here
-      router.push("/home/chat"); // Redirect to success page after creation
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white flex flex-col p-8">
       <div className="max-w-md mx-auto w-full">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Nome gruppo</h1>
         <p className="text-gray-600 mb-6">Scegli il nome di questo gruppo:</p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={() => router.push("/home/chat")} className="space-y-6">
           <input
             type="text"
             value={groupName}

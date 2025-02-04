@@ -1,6 +1,7 @@
 import { authFetch } from "@/lib/fetch";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Spot {
   _id: string;
@@ -42,7 +43,7 @@ export default async function SpotPage({ params }: PageProps) {
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {spot.featuredImageUrl && (
           <div className="h-64 overflow-hidden">
-            <img
+            <Image
               src={spot.featuredImageUrl}
               alt={spot.title}
               className="w-full object-cover"

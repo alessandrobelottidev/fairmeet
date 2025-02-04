@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useState } from "react";
 
 interface FriendLocation {
   id: number;
@@ -71,6 +71,8 @@ interface MeetUpContextType {
   updateUserCoordinates: (latitude: number, longitude: number) => void;
 }
 
+/// WTF IS THIS I DONT GET IT, DID YOU MEAN TO MAKE SOME MODIFICATIONS?
+// SHOULD HAVE UPLOADED SOME DOC OR KEPT THIS TO YOURSELF FOR NOW -Ale
 // Create the context
 export const MeetUpContext = createContext<MeetUpContextType>({
   peopleNumber: 3,
