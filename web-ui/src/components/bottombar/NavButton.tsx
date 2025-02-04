@@ -5,24 +5,16 @@ import { useRouter } from "next/navigation";
 interface NavButtonProps {
   isActive: boolean;
   goTo: string;
-  changeTab: () => void;
   icon: React.ElementType;
   label: string;
 }
 
-const NavButton = ({
-  isActive,
-  goTo,
-  changeTab,
-  icon: Icon,
-  label,
-}: NavButtonProps) => {
+const NavButton = ({ isActive, goTo, icon: Icon, label }: NavButtonProps) => {
   const router = useRouter();
 
   return (
     <button
       onClick={() => {
-        changeTab();
         router.push(goTo);
       }}
       className={`flex flex-col items-center justify-center rounded-2xl w-14 h-14 ${

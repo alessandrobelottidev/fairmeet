@@ -33,7 +33,7 @@ export function Bottombar() {
         setActiveTab(tab.goTo);
       }
     });
-  }, []);
+  }, [pathname]);
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center py-2 px-5">
@@ -41,7 +41,6 @@ export function Bottombar() {
         <NavButton
           goTo={tab.goTo}
           isActive={activeTab === tab.goTo}
-          changeTab={() => setActiveTab(tab.goTo)}
           icon={tab.icon}
           label={tab.label}
           key={i}
