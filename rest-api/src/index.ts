@@ -19,3 +19,5 @@ export type { IEvent } from '@features/places/types/event.interface';
 
 export type { IGroup } from '@features/groups/types/group.interface';
 export type { IMessage } from '@features/groups/types/message.interface';
+
+export type { ScoredPlace, RecommendationOptions } from '@core/services/recom-engine/types';
