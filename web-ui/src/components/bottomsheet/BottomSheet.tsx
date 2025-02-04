@@ -1,5 +1,6 @@
+"use client";
+
 import React, { useContext, useEffect, useState } from "react";
-import { ChevronUp, ChevronDown } from "lucide-react";
 import { MeetUpContext } from "@/app/(protected)/organize-meetup/context";
 
 const BottomSheet = () => {
@@ -20,22 +21,22 @@ const BottomSheet = () => {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl rounded-t-2xl z-1 transition-all duration-300 ease-in-out"
+      className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] rounded-t-2xl z-1 transition-all duration-300 ease-in-out"
       style={{
-        height: isExpanded ? "90vh" : "120px",
+        height: isExpanded ? "90vh" : "130px",
         overflow: "hidden",
       }}
     >
       {/* Draggable handle */}
       <div
-        className="w-full h-2 flex m-1 justify-center cursor-pointer"
+        className="w-full h-2 flex m-2 justify-center cursor-pointer"
         onClick={toggleSheet}
       >
         <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
       </div>
 
       {/* Title section */}
-      <div className="px-4 flex justify-between items-center">
+      <div className="px-4 mb-3 flex justify-between items-center">
         <h3 className="text-lg font-semibold">Luoghi Vicini a te</h3>
       </div>
 

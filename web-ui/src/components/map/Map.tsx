@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "./map.css";
 
 //TO-DO: - stop the reload of the map
 export default function Map({
