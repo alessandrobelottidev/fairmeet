@@ -1,20 +1,31 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 interface NavButtonProps {
+  isActive: boolean;
+  goTo: string;
+  changeTab: () => void;
   icon: React.ElementType;
   label: string;
-  isActive: boolean;
-  onClick: () => void;
 }
 
 const NavButton = ({
+  isActive,
+  goTo,
+  changeTab,
   icon: Icon,
   label,
-  isActive,
-  onClick,
 }: NavButtonProps) => {
+  const router = useRouter();
+
   return (
     <button
-      onClick={onClick}
-      className={`flex flex-col items-center rounded-lg px-4 py-2 ${
+      onClick={() => {
+        changeTab();
+        router.push(goTo);
+      }}
+      className={`flex flex-col items-center justify-center rounded-2xl w-14 h-14 ${
         isActive ? "bg-green-600 text-white" : "text-gray-600"
       } focus:outline-none transition-colors duration-200`}
     >
