@@ -4,7 +4,7 @@ import { MeetUpContext } from "../context";
 import { Plus, Minus } from "lucide-react";
 import Link from "next/link";
 
-export default function EventsPage() {
+export default function SearchResultsPage() {
   const {
     peopleNumber,
     recommendations,

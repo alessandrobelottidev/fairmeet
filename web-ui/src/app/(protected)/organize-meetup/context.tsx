@@ -7,8 +7,7 @@ interface FriendLocation {
   position: string;
 }
 
-//create the request based on user preferences
-interface MeetUpData {
+interface MeetupUserPreferences {
   coordinates: number[][];
   groupSize: number;
   preferences?: {
@@ -42,8 +41,8 @@ interface responseData {
 }
 
 interface MeetUpContextType {
-  peopleNumber: number; // This cannot be undefined because you assign a default value
-  friends: FriendLocation[] | undefined; // Friends can be undefined initially
+  peopleNumber: number;
+  friends: FriendLocation[] | undefined;
   recommendations: responseData[];
   selectedEvents: Set<responseData>;
   groupName: string;
@@ -76,8 +75,7 @@ interface MeetUpContextType {
 // Create the context
 export const MeetUpContext = createContext<MeetUpContextType>({
   peopleNumber: 3,
-  friends: undefined, // Explicitly set this to `undefined`,
-  // meetup: undefined,
+  friends: undefined,
   recommendations: [],
   selectedEvents: new Set<responseData>(),
   groupName: "",
@@ -103,9 +101,6 @@ export const MeetUpContext = createContext<MeetUpContextType>({
   fetchRecommendations: (positions: number[][], peopleNumber: number) => {
     console.warn("fetchRecommendations is not implemented");
   },
-  // updateMeetUpData: (coordinates: number[][]) => {
-  //   console.warn("updateMeetUpData is not implemented");
-  // },
   toggleEventSelection: (event: responseData) => {
     console.warn("toggleEventSelection is not implemented");
   },
@@ -196,7 +191,7 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
     positions: number[][],
     peopleNumber: number
   ) => {
-    const data: MeetUpData = {
+    const data: MeetupUserPreferences = {
       coordinates: positions,
       groupSize: peopleNumber,
       preferences: {
@@ -207,11 +202,9 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
       },
     };
 
-    // console.log(data);
-
     try {
       const response = await fetch("http://localhost:3001/v1/recommend", {
-        method: "POST", // Changed to POST since body in GET is unconventional
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -226,7 +219,7 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
       if (peopleNumber == 0) {
         setUserRecommendations(result);
       } else {
-        setRecommendations(result); // Save the recommendations to state
+        setRecommendations(result);
       }
     } catch (error: any) {
       console.error("Failed to fetch recommendations:", error);

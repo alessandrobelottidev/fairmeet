@@ -27,7 +27,6 @@ const BottomSheet = () => {
         overflow: "hidden",
       }}
     >
-      {/* Draggable handle */}
       <div
         className="w-full h-2 flex m-2 justify-center cursor-pointer"
         onClick={toggleSheet}
@@ -47,7 +46,7 @@ const BottomSheet = () => {
         } overflow-y-auto px-4 pb-4`}
       >
         {isExpanded && (
-          <div className="space-y-4">
+          <div className="space-y-4 pb-5">
             {userRecommendations.length === 0 ? (
               <div className="text-center text-gray-500 py-4">
                 Nessun risultato trovato
@@ -69,9 +68,6 @@ const BottomSheet = () => {
                 </div>
               ))
             )}
-
-            {/* Spacer to ensure full scrollability */}
-            <div className="h-2 w-full"></div>
           </div>
         )}
       </div>
