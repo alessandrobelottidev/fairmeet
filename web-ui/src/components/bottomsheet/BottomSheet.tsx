@@ -22,7 +22,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ recommendations }) => {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] rounded-t-2xl z-1 transition-all duration-300 ease-in-out"
+      className="fixed bottom-0 sm:bottom-10 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] rounded-2xl z-1 transition-all duration-300 ease-in-out max-w-screen-sm w-full mx-auto"
       style={{
         height: isExpanded ? "90vh" : "130px",
         overflow: "hidden",

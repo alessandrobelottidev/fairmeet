@@ -25,7 +25,9 @@ export default function MapPage() {
   return (
     <>
       <Map coordinates={coordinates} recommendations={recommendations} />
-      <PinLocation />
+      <div className="sm:relative">
+        <PinLocation />
+      </div>
 
       <BottomSheet recommendations={recommendations} />
     </>

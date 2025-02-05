@@ -9,8 +9,10 @@ export default async function ProtectedLayout({
 }) {
   return (
     <MeetUpProvider>
-      <div className="min-h-screen sm:min-h-[calc(_100vw_-_70px)] h-full flex flex-col bg-gray-100">
-        <main className="flex-[1] h-full max-w-7xl">{children}</main>
+      <div className="min-h-screen sm:min-h-fit h-full flex flex-col bg-gray-100 overflow-hidden">
+        <main className="flex-[1] h-full max-w-7xl overflow-hidden">
+          {children}
+        </main>
 
         <Bottombar />
       </div>

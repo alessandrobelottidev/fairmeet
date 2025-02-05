@@ -97,17 +97,11 @@ export default function Map({
   }, [coordinates, recommendations]);
 
   return (
-    <div
-      id="map"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: "100%",
-        zIndex: 0,
-      }}
-    />
+    <div className="sm:w-full sm:h-full sm:relative">
+      <div
+        id="map"
+        className="fixed sm:absolute top-0 left-0 right-0 bottom-0 w-full z-0"
+      />
+    </div>
   );
 }
