@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { ScoredPlace } from "@fairmeet/rest-api";
-import { MapPin, Clock, Activity } from "lucide-react";
+import { PlaceItem } from "./PlaceItem";
 
 interface BottomSheetProps {
   recommendations: ScoredPlace[];
@@ -56,25 +56,8 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ recommendations }) => {
                 Nessun risultato trovato
               </div>
             ) : (
-              recommendations.map((recommendation) => (
-                <div
-                  key={recommendation.place._id}
-                  className="flex flex-col space-y-3 border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex justify-between items-start">
-                    <h2 className="font-semibold text-gray-800">
-                      {recommendation.place.title}
-                    </h2>
-                    <span className="text-sm text-gray-500 flex items-center">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {formatDistance(recommendation.score)} km
-                    </span>
-                  </div>
-
-                  <p className="text-sm text-gray-600">
-                    {recommendation.place.description}
-                  </p>
-                </div>
+              recommendations.map(({ place }, i) => (
+                <PlaceItem place={place} key={i} />
               ))
             )}
           </div>
