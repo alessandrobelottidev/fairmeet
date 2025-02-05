@@ -68,7 +68,7 @@ export default function Map({
       }
 
       const popupContent = `
-        <div class="flex flex-col items-center p-2">
+        <div class="flex flex-col items-center p-1">
           <div class="relative w-[50px] h-[50px] bg-gray-100 rounded-md overflow-hidden">
           
             <img 
