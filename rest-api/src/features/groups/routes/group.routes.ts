@@ -428,4 +428,54 @@ router
   .patch(requireAuthentication, groupController.editMessage)
   .delete(requireAuthentication, groupController.deleteMessage);
 
+/**
+ * @swagger
+ * /v1/users/{user_id}/groups/{group_id}/has-updates:
+ *   get:
+ *     summary: Check if a group has new messages since a given timestamp
+ *     tags:
+ *       - Groups | FEATURE
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user performing the operation
+ *       - in: path
+ *         name: group_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the group
+ *       - in: query
+ *         name: since
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: Timestamp to check for updates since
+ *     responses:
+ *       200:
+ *         description: Status of updates
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 hasUpdates:
+ *                   type: boolean
+ *                   description: Whether there are new messages
+ *       401:
+ *         description: Unauthorized access
+ *       404:
+ *         description: Group not found
+ */
+router.get(
+  '/:user_id/groups/:group_id/has-updates',
+  requireAuthentication,
+  groupController.hasUpdates,
+);
+
 export default router;

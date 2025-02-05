@@ -5,6 +5,7 @@ import {
   sendMessage as sendMessageAction,
 } from "@/app/actions/chat";
 import { getCurrentUser } from "@/lib/auth";
+import { clientFetch } from "@/lib/client-fetch";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface ChatData {
@@ -64,21 +65,6 @@ const globalCache: GlobalCache = {
   metadata: new Map(),
 };
 
-/**
- * Chat State Manager
- *
- * Provides centralized state management for the chat system with:
- * - Authentication management
- * - Real-time updates
- * - Caching
- * - Optimistic updates
- *
- * @example
- * ```typescript
- * const chatManager = useChatManager(userId);
- * const { data, loading } = chatManager.useChatData(groupId);
- * ```
- */
 export function useChatManager(userId: string | undefined) {
   const [forceUpdate, setForceUpdate] = useState(0);
   const activeChatRef = useRef<string | null>(null);
@@ -277,12 +263,17 @@ export function useChatManager(userId: string | undefined) {
           // For polling updates, check if we have new messages
           if (isPolling) {
             const lastUpdate = lastMessageUpdateRef.current[groupId] || 0;
-            const hasUpdates = await fetch(
-              `${process.env.NEXT_PUBLIC_API_URL}/v1/groups/${groupId}/has-updates?since=${lastUpdate}`
+            const hasUpdates = await clientFetch<{ hasUpdates: boolean }>(
+              `/v1/users/${userId}/groups/${groupId}/has-updates`,
+              {
+                params: { since: lastUpdate },
+              }
             )
-              .then((res) => res.json())
               .then((data) => data.hasUpdates)
-              .catch(() => true); // On error, assume we need to update
+              .catch((error) => {
+                console.error("Error checking updates:", error);
+                return true; // On error, assume we need to update
+              });
 
             if (!hasUpdates) {
               return; // No new messages, skip full fetch

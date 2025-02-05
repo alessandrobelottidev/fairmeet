@@ -57,21 +57,24 @@ export default function ChatRoomContent({
           <div
             key={message._id?.toString()}
             className={`flex flex-col ${
-              message.sender.handle === user.handle
+              message.sender.handle === user.handle ||
+              message.sender.id === user.id
                 ? "items-end"
                 : "items-start"
             }`}
           >
             <div
               className={`max-w-[70%] rounded-lg p-3 ${
-                message.sender.handle === user.handle
+                message.sender.handle === user.handle ||
+                message.sender.id === user.id
                   ? "bg-gray-600 text-white"
                   : "bg-gray-100"
               }`}
             >
-              {message.sender.handle !== user.handle && (
-                <p className="font-semibold mb-1">@{message.sender.handle}</p>
-              )}
+              {message.sender.handle !== user.handle &&
+                message.sender.id !== user.id && (
+                  <p className="font-semibold mb-1">@{message.sender.handle}</p>
+                )}
               <p>{message.content}</p>
               <p className="text-xs opacity-75 mt-1">
                 {new Date(message.createdAt!).toLocaleString()}
