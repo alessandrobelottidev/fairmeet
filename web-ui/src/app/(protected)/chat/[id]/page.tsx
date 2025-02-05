@@ -1,24 +1,37 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
 import { useParams, useRouter } from "next/navigation";
 import ChatRoomContent from "@/components/chat/ChatRoomContent";
 import ChatRoomHeader from "@/components/chat/ChatRoomHeader";
 import { Send } from "lucide-react";
-import { useState } from "react";
-import { useQuery } from "@/hooks/useQuery";
-import { getGroupDetails } from "@/app/actions/chat";
-import { useChatState } from "@/hooks/useChatState";
+import { useState, useEffect } from "react";
+import { useChatManager } from "@/hooks/useChatManager";
 import type { User } from "@/lib/auth";
 
 export default function ChatRoomPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const groupId = params.id;
-  const { user, loading } = useAuth();
-  const [newMessage, setNewMessage] = useState("");
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const chatManager = useChatManager(user?.id);
 
-  // If not logged in after loading, show login prompt
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const userData = await chatManager.getAuthUser();
+        setUser(userData);
+      } catch (error) {
+        console.error("Auth error:", error);
+        router.push("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [chatManager, router]);
+
   if (!loading && !user) {
     return (
       <div className="flex flex-col h-screen bg-white">
@@ -29,8 +42,7 @@ export default function ChatRoomPage() {
     );
   }
 
-  // Show page structure with loading states while auth is loading
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="flex flex-col h-screen bg-white">
         <ChatRoomHeader
@@ -39,11 +51,9 @@ export default function ChatRoomPage() {
           onSettings={() => {}}
           refreshing={false}
         />
-
         <div className="flex items-center justify-center flex-1">
           <div className="text-gray-500">Loading...</div>
         </div>
-
         <form className="p-4 border-t border-gray-200">
           <div className="flex gap-2">
             <input
@@ -64,7 +74,8 @@ export default function ChatRoomPage() {
     );
   }
 
-  return <AuthenticatedChatRoom user={user!} groupId={groupId} />;
+  // At this point TypeScript knows user cannot be null
+  return <AuthenticatedChatRoom user={user} groupId={groupId} />;
 }
 
 function AuthenticatedChatRoom({
@@ -76,47 +87,54 @@ function AuthenticatedChatRoom({
 }) {
   const router = useRouter();
   const [newMessage, setNewMessage] = useState("");
-  const chatState = useChatState(user.id);
+  const chatManager = useChatManager(user.id);
+  const { data: chatData, loading: chatLoading } =
+    chatManager.useChatData(groupId);
+  const [metadata, setMetadata] = useState<any>(null);
 
-  const { mutate: sendMessageMutate } = chatState.sendMessageMutation(groupId);
-  const { messages, messagesRefetching, refetchMessages } =
-    chatState.useGroupMessages(groupId);
+  // Fetch group metadata
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        const data = await chatManager.getGroupMetadata(groupId);
+        setMetadata(data);
+      } catch (error) {
+        console.error("Failed to fetch group metadata:", error);
+        router.push("/chat");
+      }
+    };
 
-  const {
-    data: group,
-    isInitialLoading: groupInitialLoading,
-    isRefetching: groupRefetching,
-  } = useQuery(
-    ["group-details", groupId, user.id],
-    () => getGroupDetails(user.id, groupId),
-    {
-      enabled: true,
-      onError: () => router.push("/chat"),
-    }
-  );
+    fetchMetadata();
+  }, [groupId, chatManager, router]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    await sendMessageMutate(newMessage);
-    setNewMessage("");
+    try {
+      await chatManager.sendMessage(groupId, newMessage);
+      setNewMessage("");
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
   };
 
   return (
     <div className="flex flex-col h-screen bg-white">
       <ChatRoomHeader
-        group={group}
+        group={
+          metadata && { ...metadata, members: chatData?.group?.members || [] }
+        }
         user={{ id: user.id }}
         onBack={() => router.push("/chat")}
-        onRefresh={refetchMessages}
+        onRefresh={() => chatManager.invalidateCache(groupId)}
         onSettings={() => router.push(`/chat/${groupId}/settings`)}
-        refreshing={messagesRefetching || groupRefetching}
+        refreshing={chatLoading}
       />
 
       <ChatRoomContent
         user={{ id: user.id, handle: user.handle }}
-        messages={messages}
+        messages={chatData?.messages ?? null}
       />
 
       <form

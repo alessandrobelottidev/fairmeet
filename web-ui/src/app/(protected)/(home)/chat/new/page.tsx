@@ -1,29 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { clientFetch } from "@/lib/client-fetch";
 import { ArrowLeft } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
-import { useChatState } from "@/hooks/useChatState";
+import { clientFetch } from "@/lib/client-fetch";
+import { useChatManager } from "@/hooks/useChatManager";
+import type { User } from "@/lib/auth";
 
 export default function NewGroupPage() {
-  const { user } = useAuth();
   const router = useRouter();
-  const { invalidateCache } = useChatState(user?.id ?? "");
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const chatManager = useChatManager(user?.id);
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Auth check
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const userData = await chatManager.getAuthUser();
+        setUser(userData);
+      } catch (error) {
+        console.error("Auth error:", error);
+        router.push("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [chatManager, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
     try {
-      setLoading(true);
+      setSubmitting(true);
+      setError(null);
+
       await clientFetch(`/v1/users/${user.id}/groups`, {
         method: "POST",
         headers: {
@@ -33,17 +54,32 @@ export default function NewGroupPage() {
       });
 
       // Invalidate the groups cache after creating a new group
-      invalidateCache();
+      chatManager.invalidateCache();
 
       router.push("/chat");
-    } catch (error) {
-      console.error("Failed to create group:", error);
+    } catch (err) {
+      console.error("Failed to create group:", err);
+      setError("Failed to create group. Please try again.");
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  if (!user) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
+          <div className="px-4 py-2 flex items-center">
+            <div className="text-lg font-semibold">Loading...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -60,6 +96,10 @@ export default function NewGroupPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="p-4 space-y-4">
+        {error && (
+          <div className="bg-red-50 text-red-600 p-3 rounded-md">{error}</div>
+        )}
+
         <div>
           <label
             htmlFor="name"
@@ -100,10 +140,10 @@ export default function NewGroupPage() {
 
         <button
           type="submit"
-          disabled={loading || !formData.name.trim()}
+          disabled={submitting || !formData.name.trim()}
           className="w-full rounded-full bg-green-500 px-4 py-2 text-white font-medium hover:bg-green-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {loading ? "Creating..." : "Create Group"}
+          {submitting ? "Creating..." : "Create Group"}
         </button>
       </form>
     </div>

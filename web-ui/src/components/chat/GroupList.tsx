@@ -1,39 +1,53 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
-import GroupChatItem from "@/components/chat/GroupChatItem";
-import { useChatState } from "@/hooks/useChatState";
+import { GroupPreview } from "@/components/chat/GroupPreview";
+import { useChatManager } from "@/hooks/useChatManager";
 
 interface GroupListProps {
+  userId: string;
   refreshButtonId: string;
 }
 
-export function GroupList({ refreshButtonId }: GroupListProps) {
-  const { user } = useAuth();
+export function GroupList({ userId, refreshButtonId }: GroupListProps) {
   const router = useRouter();
+  const chatManager = useChatManager(userId);
+  const [groups, setGroups] = useState<any[] | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const {
-    groups,
-    groupsLoading: isInitialLoading,
-    groupsRefetching: isRefetching,
-    refetchGroups,
-  } = useChatState(user?.id ?? "");
+  const loadGroups = React.useCallback(async () => {
+    try {
+      setLoading(true);
+      const groupsData = await chatManager.fetchGroups();
+      setGroups(groupsData);
+    } catch (err) {
+      console.error("Failed to load groups:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [chatManager]);
+
+  // Initial groups fetch
+  useEffect(() => {
+    loadGroups();
+  }, [loadGroups]);
 
   // Hydrate refresh button
-  React.useEffect(() => {
+  useEffect(() => {
     const refreshButton = document
       .getElementById(refreshButtonId)
       ?.querySelector("button");
     if (refreshButton) {
-      refreshButton.onclick = () => refetchGroups();
+      refreshButton.onclick = () => {
+        chatManager.invalidateCache();
+        loadGroups();
+      };
     }
-  }, [refreshButtonId, refetchGroups]);
+  }, [refreshButtonId, chatManager, loadGroups]);
 
-  // Initial loading state - only show if we have no groups data
-  if (isInitialLoading && !groups) {
+  if (loading && !groups) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-gray-500">Loading chat groups...</div>
@@ -41,7 +55,6 @@ export function GroupList({ refreshButtonId }: GroupListProps) {
     );
   }
 
-  // No groups state
   if (!groups || groups.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 px-4">
@@ -60,13 +73,13 @@ export function GroupList({ refreshButtonId }: GroupListProps) {
     );
   }
 
-  // Groups list
   return (
     <div className="divide-y divide-gray-300">
       {groups.map((group) => (
-        <GroupChatItem
+        <GroupPreview
           key={group._id?.toString()}
-          group={group}
+          groupId={group._id}
+          userId={userId}
           onClick={() => router.push(`/chat/${group._id}`)}
         />
       ))}
