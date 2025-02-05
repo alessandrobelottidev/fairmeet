@@ -5,15 +5,18 @@ import { useRouter } from "next/navigation";
 import { clientFetch } from "@/lib/client-fetch";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useChatState } from "@/hooks/useChatState";
 
 export default function NewGroupPage() {
   const { user } = useAuth();
+  const router = useRouter();
+  const { invalidateCache } = useChatState(user?.id ?? "");
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +31,10 @@ export default function NewGroupPage() {
         },
         body: JSON.stringify(formData),
       });
+
+      // Invalidate the groups cache after creating a new group
+      invalidateCache();
+
       router.push("/chat");
     } catch (error) {
       console.error("Failed to create group:", error);

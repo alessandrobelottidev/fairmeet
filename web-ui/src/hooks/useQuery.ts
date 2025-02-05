@@ -4,6 +4,7 @@ interface QueryOptions<T> {
   refetchInterval?: number;
   enabled?: boolean;
   onError?: (error: any) => void;
+  initialData?: T | (() => T | undefined);
 }
 
 export function useQuery<T>(
@@ -11,8 +12,16 @@ export function useQuery<T>(
   fetchFn: () => Promise<T>,
   options: QueryOptions<T> = {}
 ) {
-  const [data, setData] = useState<T | null>(null);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  // Initialize with initialData if provided
+  const [data, setData] = useState<T | null>(() => {
+    if (typeof options.initialData === "function") {
+      return (options.initialData as () => T | undefined)() ?? null;
+    }
+    return options.initialData ?? null;
+  });
+
+  // Only show initial loading if we don't have data
+  const [isInitialLoading, setIsInitialLoading] = useState(!data);
   const [isRefetching, setIsRefetching] = useState(false);
   const [error, setError] = useState<any>(null);
 
@@ -20,7 +29,7 @@ export function useQuery<T>(
     if (options.enabled === false) return;
 
     try {
-      if (!isRefresh) {
+      if (!isRefresh && !data) {
         setIsInitialLoading(true);
       } else {
         setIsRefetching(true);
@@ -33,16 +42,18 @@ export function useQuery<T>(
       setError(err);
       options.onError?.(err);
     } finally {
-      if (!isRefresh) {
-        setIsInitialLoading(false);
-      } else {
-        setIsRefetching(false);
-      }
+      setIsInitialLoading(false);
+      setIsRefetching(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    // If we have initialData, don't show loading state but still fetch in background
+    if (data) {
+      fetchData(true);
+    } else {
+      fetchData();
+    }
 
     let intervalId: NodeJS.Timeout | null = null;
     if (options.refetchInterval) {
@@ -55,7 +66,7 @@ export function useQuery<T>(
   }, key);
 
   const refetch = () => {
-    fetchData(true);
+    return fetchData(true);
   };
 
   return {

@@ -6,24 +6,37 @@ import { getCurrentUser, type User } from "@/lib/auth";
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let mounted = true;
+
     const fetchUser = async () => {
       try {
-        console.log("Fetching user..."); // Debug log
         const userData = await getCurrentUser();
-        console.log("User data received:", userData); // Debug log
-        setUser(userData);
+        if (mounted) {
+          setUser(userData);
+          setError(null);
+        }
       } catch (error) {
-        console.error("Failed to fetch user:", error);
-        setUser(null);
+        if (mounted) {
+          console.error("Failed to fetch user:", error);
+          setError(error as Error);
+          setUser(null);
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchUser();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  return { user, loading };
+  return { user, loading, error };
 }

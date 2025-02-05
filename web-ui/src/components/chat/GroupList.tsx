@@ -3,11 +3,9 @@
 import React from "react";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { IGroup } from "@fairmeet/rest-api";
 import { useAuth } from "@/hooks/useAuth";
 import GroupChatItem from "@/components/chat/GroupChatItem";
-import { getGroups } from "@/app/actions/chat";
-import { useQuery } from "@/hooks/useQuery";
+import { useChatState } from "@/hooks/useChatState";
 
 interface GroupListProps {
   refreshButtonId: string;
@@ -18,21 +16,11 @@ export function GroupList({ refreshButtonId }: GroupListProps) {
   const router = useRouter();
 
   const {
-    data: groups,
-    isInitialLoading,
-    isRefetching,
-    refetch: refetchGroups,
-  } = useQuery(
-    ["groups", user?.id ?? ""],
-    () => {
-      if (!user?.id) return Promise.resolve([]);
-      return getGroups(user.id);
-    },
-    {
-      // Removed refetchInterval
-      enabled: !!user?.id,
-    }
-  );
+    groups,
+    groupsLoading: isInitialLoading,
+    groupsRefetching: isRefetching,
+    refetchGroups,
+  } = useChatState(user?.id ?? "");
 
   // Hydrate refresh button
   React.useEffect(() => {
@@ -44,8 +32,8 @@ export function GroupList({ refreshButtonId }: GroupListProps) {
     }
   }, [refreshButtonId, refetchGroups]);
 
-  // Initial loading state
-  if (isInitialLoading) {
+  // Initial loading state - only show if we have no groups data
+  if (isInitialLoading && !groups) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-gray-500">Loading chat groups...</div>
