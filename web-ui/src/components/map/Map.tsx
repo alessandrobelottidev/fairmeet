@@ -6,8 +6,8 @@ import "leaflet/dist/leaflet.css";
 import "./map.css";
 import { MeetUpContext } from "@/app/(protected)/organize-meetup/context";
 import { ScoredPlace } from "@fairmeet/rest-api";
-import redMarkerIcon from "@/assets/markers/red-marker.png";
-import greenMarkerIcon from "@/assets/markers/green-marker.png";
+import CustomMarker from "./CustomMarker";
+import { isValidUrl } from "@/lib/url";
 
 export default function Map({
   coordinates,
@@ -17,22 +17,6 @@ export default function Map({
   recommendations: ScoredPlace[];
 }) {
   let map: L.Map;
-  // Custom markers using local assets
-  const redIcon = L.icon({
-    iconUrl: redMarkerIcon.src,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-
-  const greenIcon = L.icon({
-    iconUrl: greenMarkerIcon.src,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
 
   useEffect(() => {
     const [latitude, longitude] = coordinates;
@@ -60,13 +44,51 @@ export default function Map({
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    // Add markers
-    L.marker([latitude, longitude], { icon: redIcon }).addTo(map);
+    // User marker
+    L.marker([latitude, longitude], { icon: CustomMarker("green") })
+      .addTo(map)
+      .bindPopup("@you", {
+        className: "bg-white rounded-lg shadow-lg overflow-hidden",
+        closeOnClick: false,
+        autoClose: false,
+        closeButton: false,
+      });
 
+    // Events and spots marker
     recommendations.forEach((event) => {
       const lat = event.place.location.coordinates[0];
       const lng = event.place.location.coordinates[1];
-      L.marker([lat, lng], { icon: greenIcon }).addTo(map);
+
+      var urlImage;
+
+      if (isValidUrl(event.place.featuredImageUrl)) {
+        urlImage = event.place.featuredImageUrl;
+      } else {
+        urlImage = "/placeholder.jpg";
+      }
+
+      const popupContent = `
+        <div class="flex flex-col items-center p-2">
+          <div class="relative w-[50px] h-[50px] bg-gray-100 rounded-md overflow-hidden">
+          
+            <img 
+              src="${urlImage}" 
+              class="w-full h-full object-cover transition-opacity duration-300"
+              onerror="this.classList.add('opacity-0')"
+            />
+          </div>
+        </div>
+      `;
+
+      L.marker([lat, lng], { icon: CustomMarker("black") })
+        .addTo(map)
+        .bindPopup(popupContent, {
+          // className: "bg-white rounded-lg shadow-lg overflow-hidden",
+          closeOnClick: false,
+          autoClose: false,
+          closeButton: false,
+        })
+        .openPopup();
     });
 
     return () => {
