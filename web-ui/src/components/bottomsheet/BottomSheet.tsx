@@ -74,27 +74,6 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ recommendations }) => {
                   <p className="text-sm text-gray-600">
                     {recommendation.place.description}
                   </p>
-
-                  {/* <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    {recommendation.place.indoor && (
-                      <span className="flex items-center">
-                        <Activity className="w-4 h-4 mr-1" />
-                        Indoor
-                      </span>
-                    )}
-                    {recommendation.place.outdoor && (
-                      <span className="flex items-center">
-                        <Activity className="w-4 h-4 mr-1" />
-                        Outdoor
-                      </span>
-                    )}
-                    {recommendation.place.openingHours && (
-                      <span className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {recommendation.place.openingHours}
-                      </span>
-                    )}
-                  </div> */}
                 </div>
               ))
             )}
