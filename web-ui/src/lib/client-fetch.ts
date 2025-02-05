@@ -8,6 +8,12 @@ export async function clientFetch<T>(
 ): Promise<T> {
   const { params, ...restOptions } = options;
 
+  // Get access token from cookie
+  const cookies = document.cookie.split(";");
+  const accessToken = cookies
+    .find((cookie) => cookie.trim().startsWith("accessToken="))
+    ?.split("=")[1];
+
   const queryParams = params
     ? "?" +
       new URLSearchParams(
@@ -22,6 +28,11 @@ export async function clientFetch<T>(
     {
       ...restOptions,
       credentials: "include",
+      headers: {
+        ...restOptions.headers,
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
     }
   );
 

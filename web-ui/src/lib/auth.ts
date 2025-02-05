@@ -8,7 +8,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export type UserRole = "admin" | "business_owner" | "gov_entity" | "basic";
 
-interface User {
+export interface User {
+  id: string;
   handle: string;
   email: string;
   role: UserRole;
@@ -244,7 +245,8 @@ export async function getCurrentUser(): Promise<User | null> {
     if (!response.ok) return null;
 
     const data = await response.json();
-    return data.user;
+
+    return { ...data.user, id: data.id };
   } catch {
     return null;
   }

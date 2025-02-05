@@ -321,6 +321,7 @@ const fetchAuthUserProfile: RequestHandler = async (req, res, next) => {
 
     res.json({
       success: true,
+      id: dbUser?._id,
       user: dbUser,
     });
   } catch (error) {

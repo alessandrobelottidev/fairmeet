@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { refreshAccessToken } from "./auth";
 
 interface FetchOptions extends RequestInit {
   params?: Record<string, string | number | undefined>;
@@ -10,7 +11,7 @@ export async function authFetch<T>(
   options: FetchOptions = {}
 ): Promise<T> {
   const cookieStore = cookies();
-  const accessToken = (await cookieStore).get("accessToken")?.value;
+  let accessToken = (await cookieStore).get("accessToken")?.value;
 
   const { params, ...restOptions } = options;
 
@@ -23,18 +24,47 @@ export async function authFetch<T>(
       ).toString()
     : "";
 
-  const response = await fetch(`${process.env.API_URL}${path}${queryParams}`, {
-    ...restOptions,
-    headers: {
-      ...restOptions.headers,
-      Authorization: `Bearer ${accessToken}`,
-    },
-    cache: options.cache ?? "no-store",
-  });
+  async function performFetch(token: string) {
+    const response = await fetch(
+      `${process.env.API_URL}${path}${queryParams}`,
+      {
+        ...restOptions,
+        headers: {
+          ...restOptions.headers,
+          Authorization: `Bearer ${token}`,
+        },
+        cache: options.cache ?? "no-store",
+      }
+    );
 
-  if (!response.ok) {
+    if (response.ok) {
+      return response.json();
+    }
+
+    // If we get a 401 with token expired message
+    if (response.status === 401) {
+      const errorData = await response.json();
+      if (errorData.feedback === "Token lifetime exceeded!") {
+        throw new Error("TOKEN_EXPIRED");
+      }
+    }
+
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return response.json();
+  try {
+    // First attempt with current token
+    return await performFetch(accessToken!);
+  } catch (error) {
+    if (error instanceof Error && error.message === "TOKEN_EXPIRED") {
+      // Token expired, try to refresh
+      const newToken = await refreshAccessToken();
+      if (!newToken) {
+        throw new Error("Failed to refresh token");
+      }
+      // Retry with new token
+      return await performFetch(newToken);
+    }
+    throw error;
+  }
 }
