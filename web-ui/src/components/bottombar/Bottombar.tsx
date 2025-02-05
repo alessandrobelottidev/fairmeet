@@ -36,7 +36,7 @@ export function Bottombar() {
   }, [pathname]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center py-2 px-5">
+    <div className="h-[70px] z-20 bg-white border-t border-gray-200 flex justify-around items-center py-2 px-5">
       {tabs.map((tab, i) => (
         <NavButton
           goTo={tab.goTo}
