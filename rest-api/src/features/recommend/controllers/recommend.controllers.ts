@@ -26,12 +26,11 @@ function calculateCentroid(coordinates: number[][]) {
   const hyp = Math.sqrt(x * x + y * y); // Hypotenuse
   const lat = Math.atan2(z, hyp) * (180 / Math.PI); // Convert back to degrees
 
-  return [lon, lat];
+  return [lat, lon];
 }
 
 export const getRecommendationsByUsersCoordinates: RequestHandler = async (req, res, next) => {
   const list_coordinates = req.body.coordinates;
-  // const radius = req.body.preferences.maxDistance * 1000; //conversion km to m
   const radius = 10000;
 
   //Least distant common point
@@ -39,7 +38,6 @@ export const getRecommendationsByUsersCoordinates: RequestHandler = async (req, 
 
   //Get the list of all places in IPlaces format
   const result1 = await getPlacesByCoordinates(latitude, longitude, radius);
-
   //Set a variable with RecommendationOptions vlaue for the next function
   const data: RecommendationOptions = {
     currentTime: new Date(),
@@ -53,11 +51,8 @@ export const getRecommendationsByUsersCoordinates: RequestHandler = async (req, 
     },
   };
 
-  // console.log(data);
-
   const service = new PlaceRecommendationService();
   const result2: ScoredPlace[] = await service.getRecommendations(result1, data);
-
   res.status(200).json(result2);
 };
 
