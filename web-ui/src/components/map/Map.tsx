@@ -12,9 +12,11 @@ import { isValidUrl } from "@/lib/url";
 export default function Map({
   coordinates,
   recommendations,
+  mapRef,
 }: {
   coordinates: number[];
   recommendations: ScoredPlace[];
+  mapRef: React.MutableRefObject<L.Map | null>;
 }) {
   let map: L.Map;
 
@@ -38,6 +40,9 @@ export default function Map({
       center: [latitude, longitude], // Initial center at provided coordinates
       zoom: 15, // Initial zoom level
     });
+
+    // Store map reference
+    mapRef.current = map;
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
@@ -92,6 +97,7 @@ export default function Map({
     });
 
     return () => {
+      mapRef.current = null;
       map.remove();
     };
   }, [coordinates, recommendations]);
