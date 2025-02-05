@@ -1,10 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useParams } from "next/navigation";
-import { ReactNode, Suspense } from "react";
+import { Suspense } from "react";
 import ChatRoomContent from "@/components/chat/ChatRoomContent";
+
+export const suppressLayout = true;
 
 export default function ChatRoomPage() {
   const { user } = useAuth();
@@ -28,17 +29,3 @@ export default function ChatRoomPage() {
     </Suspense>
   );
 }
-
-async function FreeLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      <main className="flex-[1] h-full max-w-7xl sm:px-6 lg:px-8">
-        {children}
-      </main>
-    </div>
-  );
-}
-
-ChatRoomPage.getLayout = function getLayout(page: any) {
-  return <FreeLayout>{page}</FreeLayout>;
-};

@@ -10,7 +10,12 @@ export async function getGroupMessages(
   try {
     return await authFetch<IMessage[]>(
       `/v1/users/${userId}/groups/${groupId}/messages`
-    );
+    ).then((v) => {
+      return v.sort(
+        (a, b) =>
+          new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime()
+      );
+    });
   } catch (error) {
     console.error("Failed to fetch messages:", error);
     throw new Error("Failed to fetch messages");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
@@ -12,7 +12,7 @@ import { useQuery, useMutation } from "@/hooks/useQuery";
 import ChatRoomHeader from "@/components/chat/ChatRoomHeader";
 
 interface ChatRoomContentProps {
-  user: { id: string };
+  user: { id: string; handle: string };
   groupId: string;
 }
 
@@ -35,6 +35,29 @@ export default function ChatRoomContent({
       enabled: true,
     }
   );
+
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const shouldScrollToBottomRef = useRef(true);
+
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current && shouldScrollToBottomRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  };
+
+  const handleScroll = () => {
+    if (messagesContainerRef.current) {
+      const { scrollTop, clientHeight, scrollHeight } =
+        messagesContainerRef.current;
+      shouldScrollToBottomRef.current =
+        scrollHeight - scrollTop === clientHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const {
     data: group,
@@ -59,6 +82,10 @@ export default function ChatRoomContent({
       },
     }
   );
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
 
   const [newMessage, setNewMessage] = useState("");
 
@@ -99,33 +126,44 @@ export default function ChatRoomContent({
       />
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div
+        ref={messagesContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto p-4 space-y-2"
+      >
         {!messages || messages.length === 0 ? (
           <div className="text-center text-gray-500">No messages yet</div>
         ) : (
-          messages.map((message) => (
-            <div
-              key={message._id?.toString()}
-              className={`flex flex-col ${
-                message.sender.toString() === user.id
-                  ? "items-end"
-                  : "items-start"
-              }`}
-            >
+          messages.map((message) => {
+            return (
               <div
-                className={`max-w-[70%] rounded-lg p-3 ${
-                  message.sender.toString() === user.id
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-100"
+                key={message._id?.toString()}
+                className={`flex flex-col ${
+                  message.sender.handle === user.handle
+                    ? "items-end"
+                    : "items-start"
                 }`}
               >
-                <p>{message.content}</p>
-                <p className="text-xs opacity-75 mt-1">
-                  {new Date(message.createdAt!).toLocaleTimeString()}
-                </p>
+                <div
+                  className={`max-w-[70%] rounded-lg p-3 ${
+                    message.sender.handle === user.handle
+                      ? "bg-gray-600 text-white"
+                      : "bg-gray-100"
+                  }`}
+                >
+                  {message.sender.handle !== user.handle && (
+                    <p className="font-semibold mb-1">
+                      @{message.sender.handle}
+                    </p>
+                  )}
+                  <p>{message.content}</p>
+                  <p className="text-xs opacity-75 mt-1">
+                    {new Date(message.createdAt!).toLocaleString()}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 
@@ -145,9 +183,9 @@ export default function ChatRoomContent({
           <button
             type="submit"
             disabled={!newMessage.trim()}
-            className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="h-10 w-10 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Send size={24} />
+            <Send size={20} className="mr-[2px]" />
           </button>
         </div>
       </form>
