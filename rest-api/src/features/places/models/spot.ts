@@ -71,4 +71,6 @@ spotSchema.pre('save', function (next) {
   next();
 });
 
+spotSchema.index({ location: '2dsphere' });
+
 export default mongoose.model<ISpotDocument>('spot', spotSchema);
