@@ -1,23 +1,24 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
-import { MeetUpContext } from "@/app/(protected)/organize-meetup/context";
+import React, { useState } from "react";
+import { ScoredPlace } from "@fairmeet/rest-api";
+import { MapPin, Clock, Activity } from "lucide-react";
 
-const BottomSheet = () => {
-  const { userCoordinates, userRecommendations, fetchRecommendations } =
-    useContext(MeetUpContext);
+interface BottomSheetProps {
+  recommendations: ScoredPlace[];
+}
 
+const BottomSheet: React.FC<BottomSheetProps> = ({ recommendations }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleSheet = () => {
     setIsExpanded(!isExpanded);
   };
 
-  useEffect(() => {
-    if (userCoordinates) {
-      fetchRecommendations([userCoordinates, userCoordinates], 0);
-    }
-  }, []);
+  // Calculate distance in km
+  const formatDistance = (score: number) => {
+    return score.toFixed(1);
+  };
 
   return (
     <div
@@ -37,6 +38,9 @@ const BottomSheet = () => {
       {/* Title section */}
       <div className="px-4 mb-3 flex justify-between items-center">
         <h3 className="text-lg font-semibold">Luoghi Vicini a te</h3>
+        <span className="text-sm text-gray-500">
+          {recommendations.length} risultati
+        </span>
       </div>
 
       {/* Scrollable Content section */}
@@ -47,24 +51,50 @@ const BottomSheet = () => {
       >
         {isExpanded && (
           <div className="space-y-4 pb-5">
-            {userRecommendations.length === 0 ? (
+            {recommendations.length === 0 ? (
               <div className="text-center text-gray-500 py-4">
                 Nessun risultato trovato
               </div>
             ) : (
-              userRecommendations.map((event) => (
+              recommendations.map((recommendation) => (
                 <div
-                  key={event.place._id}
-                  className="flex items-start space-x-4 border border-gray-200 rounded-lg p-4"
+                  key={recommendation.place._id}
+                  className="flex flex-col space-y-3 border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
                 >
-                  <div className="flex-1">
+                  <div className="flex justify-between items-start">
                     <h2 className="font-semibold text-gray-800">
-                      {event.place.title}
+                      {recommendation.place.title}
                     </h2>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {event.place.description}
-                    </p>
+                    <span className="text-sm text-gray-500 flex items-center">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {formatDistance(recommendation.score)} km
+                    </span>
                   </div>
+
+                  <p className="text-sm text-gray-600">
+                    {recommendation.place.description}
+                  </p>
+
+                  {/* <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    {recommendation.place.indoor && (
+                      <span className="flex items-center">
+                        <Activity className="w-4 h-4 mr-1" />
+                        Indoor
+                      </span>
+                    )}
+                    {recommendation.place.outdoor && (
+                      <span className="flex items-center">
+                        <Activity className="w-4 h-4 mr-1" />
+                        Outdoor
+                      </span>
+                    )}
+                    {recommendation.place.openingHours && (
+                      <span className="flex items-center">
+                        <Clock className="w-4 h-4 mr-1" />
+                        {recommendation.place.openingHours}
+                      </span>
+                    )}
+                  </div> */}
                 </div>
               ))
             )}
