@@ -4,7 +4,6 @@ import { useEffect, useContext } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
-import { MeetUpContext } from "@/app/(protected)/organize-meetup/context";
 import { ScoredPlace } from "@fairmeet/rest-api";
 import CustomMarker from "./CustomMarker";
 import { isValidUrl } from "@/lib/url";
@@ -16,10 +15,8 @@ export default function Map({
 }: {
   coordinates: number[];
   recommendations: ScoredPlace[];
-  mapRef: React.MutableRefObject<L.Map | null>;
+  mapRef: React.RefObject<L.Map | null>;
 }) {
-  let map: L.Map;
-
   useEffect(() => {
     const [latitude, longitude] = coordinates;
 
@@ -29,77 +26,86 @@ export default function Map({
       L.latLng(90, 180) // Northeast corner
     );
 
-    map = L.map("map", {
-      zoomControl: false,
-      minZoom: 2,
-      maxZoom: 18,
-      maxBounds: worldBounds, // Set the maximum bounds to world bounds
-      maxBoundsViscosity: 1.0, // Make the bounds completely solid
-      bounceAtZoomLimits: false, // Prevent bouncing at zoom limits
-      keyboardPanDelta: 100, // Adjust keyboard pan speed
-      center: [latitude, longitude], // Initial center at provided coordinates
-      zoom: 15, // Initial zoom level
-    });
+    // Check if map container exists
+    const container = document.getElementById("map");
+    if (!container) return;
 
-    // Store map reference
-    mapRef.current = map;
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
-
-    // User marker
-    L.marker([latitude, longitude], { icon: CustomMarker("green") })
-      .addTo(map)
-      .bindPopup("@you", {
-        className: "bg-white rounded-lg shadow-lg overflow-hidden",
-        closeOnClick: false,
-        autoClose: false,
-        closeButton: false,
+    // Initialize map only if it doesn't exist
+    if (!mapRef.current) {
+      const newMap = L.map(container, {
+        zoomControl: false,
+        minZoom: 2,
+        maxZoom: 18,
+        maxBounds: worldBounds,
+        maxBoundsViscosity: 1.0,
+        bounceAtZoomLimits: false,
+        keyboardPanDelta: 100,
+        center: [latitude, longitude],
+        zoom: 15,
       });
 
-    // Events and spots marker
-    recommendations.forEach((event) => {
-      const lat = event.place.location.coordinates[0];
-      const lng = event.place.location.coordinates[1];
+      // Store map reference
+      mapRef.current = newMap;
 
-      var urlImage;
+      // Add tile layer
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(newMap);
 
-      if (isValidUrl(event.place.featuredImageUrl)) {
-        urlImage = event.place.featuredImageUrl;
-      } else {
-        urlImage = "/placeholder.jpg";
-      }
-
-      const popupContent = `
-        <div class="flex flex-col items-center p-1">
-          <div class="relative w-[50px] h-[50px] bg-gray-100 rounded-md overflow-hidden">
-          
-            <img 
-              src="${urlImage}" 
-              class="w-full h-full object-cover transition-opacity duration-300"
-              onerror="this.classList.add('opacity-0')"
-            />
-          </div>
-        </div>
-      `;
-
-      L.marker([lat, lng], { icon: CustomMarker("black") })
-        .addTo(map)
-        .bindPopup(popupContent, {
-          // className: "bg-white rounded-lg shadow-lg overflow-hidden",
+      // User marker
+      const userMarker = L.marker([latitude, longitude], {
+        icon: CustomMarker("green"),
+      })
+        .addTo(newMap)
+        .bindPopup("@you", {
+          className: "bg-white rounded-lg shadow-lg overflow-hidden",
           closeOnClick: false,
           autoClose: false,
           closeButton: false,
-        })
-        .openPopup();
-    });
+        });
 
-    return () => {
-      mapRef.current = null;
-      map.remove();
-    };
+      // Events and spots markers
+      const markers = recommendations.map((event) => {
+        const lat = event.place.location.coordinates[0];
+        const lng = event.place.location.coordinates[1];
+
+        const urlImage = isValidUrl(event.place.featuredImageUrl)
+          ? event.place.featuredImageUrl
+          : "/placeholder.jpg";
+
+        const popupContent = `
+          <div class="flex flex-col items-center p-1">
+            <div class="relative w-[50px] h-[50px] bg-gray-100 rounded-md overflow-hidden">
+              <img 
+                src="${urlImage}" 
+                class="w-full h-full object-cover transition-opacity duration-300"
+                onerror="this.classList.add('opacity-0')"
+              />
+            </div>
+          </div>
+        `;
+
+        return L.marker([lat, lng], { icon: CustomMarker("black") })
+          .addTo(newMap)
+          .bindPopup(popupContent, {
+            closeOnClick: false,
+            autoClose: false,
+            closeButton: false,
+          })
+          .openPopup();
+      });
+
+      // Clean up function
+      return () => {
+        if (mapRef.current) {
+          markers.forEach((marker) => marker.remove());
+          userMarker.remove();
+          mapRef.current.remove();
+          mapRef.current = null;
+        }
+      };
+    }
   }, [coordinates, recommendations]);
 
   return (
