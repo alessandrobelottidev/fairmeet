@@ -40,7 +40,11 @@ export const PlaceItem = ({ place }: Props) => {
 
         <Button
           title="Dettagli"
-          href={`/places/${place.id}`}
+          href={
+            place.startDateTimeZ
+              ? `/events/${place._id}`
+              : `/spots/${place._id}`
+          }
           variant="secondary"
         />
       </div>
