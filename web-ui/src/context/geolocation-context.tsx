@@ -1,4 +1,3 @@
-// contexts/GeolocationContext.tsx
 import {
   createContext,
   useContext,

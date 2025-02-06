@@ -52,20 +52,6 @@ export default function MapPage() {
     );
   }
 
-  // Show error if permission denied
-  // if (permissionStatus === "denied") {
-  //   return (
-  //     <div className="flex flex-col items-center justify-center h-full p-4">
-  //       <Alert variant="destructive" className="mb-4">
-  //         <AlertDescription>
-  //           Location access was denied. Please enable location sharing in your
-  //           browser settings to use this feature.
-  //         </AlertDescription>
-  //       </Alert>
-  //     </div>
-  //   );
-  // }
-
   return (
     <>
       <Map
