@@ -37,7 +37,7 @@ export interface GlobalCache {
 
 // Constants
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-const POLLING_INTERVAL = 10 * 1000; // 10 seconds
+const POLLING_INTERVAL = 3 * 1000; // 3 seconds
 const AUTH_CACHE_DURATION = 60 * 1000; // 1 minute
 
 // Helper to extract metadata from group data

@@ -389,4 +389,6 @@ router.patch(
  */
 router.get('/me', requireAuthentication, authController.fetchAuthUserProfile);
 
+router.get('/users/:handle', authController.fetchUserId);
+
 export default router;

@@ -330,6 +330,24 @@ const fetchAuthUserProfile: RequestHandler = async (req, res, next) => {
   }
 };
 
+const fetchUserId: RequestHandler = async (req, res, next) => {
+  try {
+    const userHandle = req.params.handle;
+    const retrievedUser = await UserModel.find({
+      handle: userHandle,
+    }).limit(1);
+
+    if (retrievedUser.length === 0) {
+      throw new CustomError('Non esiste nessun utente con questo handle', 404);
+    }
+
+    res.json({ id: retrievedUser[0]._id, handle: retrievedUser[0].handle });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 export default {
   login,
   signUp,
@@ -339,4 +357,5 @@ export default {
   forgotPassword,
   resetPassword,
   fetchAuthUserProfile,
+  fetchUserId,
 };

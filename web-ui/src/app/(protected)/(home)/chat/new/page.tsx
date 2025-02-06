@@ -3,9 +3,16 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { clientFetch } from "@/lib/client-fetch";
 import { useChatManager } from "@/hooks/useChatManager";
 import type { User } from "@/lib/auth";
+import { MemberSearch } from "@/components/chat/MemberSearch";
+import { MemberList } from "@/components/chat/MemberList";
+import { createGroup, addGroupMember } from "@/app/actions/chat";
+
+interface Member {
+  id: string;
+  handle: string;
+}
 
 export default function NewGroupPage() {
   const router = useRouter();
@@ -17,6 +24,7 @@ export default function NewGroupPage() {
     name: "",
     description: "",
   });
+  const [members, setMembers] = useState<Member[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,13 +53,15 @@ export default function NewGroupPage() {
       setSubmitting(true);
       setError(null);
 
-      await clientFetch(`/v1/users/${user.id}/groups`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // First create the group
+      const group = await createGroup(user.id, formData);
+
+      // Then add members if any
+      if (members.length > 0) {
+        await Promise.all(
+          members.map((member) => addGroupMember(user.id, group._id, member.id))
+        );
+      }
 
       // Invalidate the groups cache after creating a new group
       chatManager.invalidateCache();
@@ -63,6 +73,18 @@ export default function NewGroupPage() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleAddMember = (member: Member) => {
+    if (members.some((m) => m.id === member.id)) {
+      setError("This user is already added to the group");
+      return;
+    }
+    setMembers((prev) => [...prev, member]);
+  };
+
+  const handleRemoveMember = (id: string) => {
+    setMembers((prev) => prev.filter((member) => member.id !== id));
   };
 
   if (loading) {
@@ -136,6 +158,14 @@ export default function NewGroupPage() {
               setFormData((prev) => ({ ...prev, description: e.target.value }))
             }
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Add Members (Optional)
+          </label>
+          <MemberSearch onAddMember={handleAddMember} />
+          <MemberList members={members} onRemoveMember={handleRemoveMember} />
         </div>
 
         <button

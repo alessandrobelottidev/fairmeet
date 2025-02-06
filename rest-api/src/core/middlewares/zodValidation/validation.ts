@@ -10,6 +10,7 @@ export const createValidationHandler = (schema: z.ZodSchema): RequestHandler => 
   return async (req, res, next) => {
     try {
       const validatedData = await schema.parseAsync(req.body);
+
       // Preserve user and other auth data
       const { user, accessToken, ...rest } = req.body;
       req.body = {
@@ -19,6 +20,7 @@ export const createValidationHandler = (schema: z.ZodSchema): RequestHandler => 
       };
       next();
     } catch (error) {
+      console.error(error);
       next(error);
     }
   };

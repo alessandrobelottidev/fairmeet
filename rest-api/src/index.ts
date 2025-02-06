@@ -21,3 +21,6 @@ export type { IGroup } from '@features/groups/types/group.interface';
 export type { IMessage } from '@features/groups/types/message.interface';
 
 export type { ScoredPlace, RecommendationOptions } from '@core/services/recom-engine/types';
+
+export type { IUser } from '@features/auth/types/user';
+export type { Role } from '@features/auth/types/role';

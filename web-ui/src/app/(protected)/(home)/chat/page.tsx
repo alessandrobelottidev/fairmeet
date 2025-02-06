@@ -51,7 +51,10 @@ export default function ChatPage() {
         refreshButtonId="groups-refresh"
         createButtonLink="/chat/new"
       />
-      <GroupList userId={user.id} refreshButtonId="groups-refresh" />
+
+      <div className="h-full max-h-[calc(_100vh_-_120px_)] overflow-y-scroll">
+        <GroupList userId={user.id} refreshButtonId="groups-refresh" />
+      </div>
     </div>
   );
 }
