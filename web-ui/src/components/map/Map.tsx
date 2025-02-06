@@ -1,21 +1,21 @@
 "use client";
 
 import { useEffect, useContext } from "react";
-import L from "leaflet";
+import L, { marker } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
 import { ScoredPlace } from "@fairmeet/rest-api";
-import CustomMarker from "./CustomMarker";
-import { isValidUrl } from "@/lib/url";
 
 export default function Map({
   coordinates,
   recommendations,
   mapRef,
+  markers,
 }: {
   coordinates: number[];
   recommendations: ScoredPlace[];
   mapRef: React.RefObject<L.Map | null>;
+  markers: L.Marker[];
 }) {
   useEffect(() => {
     const [latitude, longitude] = coordinates;
@@ -53,54 +53,16 @@ export default function Map({
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(newMap);
 
-      // User marker
-      const userMarker = L.marker([latitude, longitude], {
-        icon: CustomMarker("green"),
-      })
-        .addTo(newMap)
-        .bindPopup("@you", {
-          className: "bg-white rounded-lg shadow-lg overflow-hidden",
-          closeOnClick: false,
-          autoClose: false,
-          closeButton: false,
-        });
-
-      // Events and spots markers
-      const markers = recommendations.map((event) => {
-        const lat = event.place.location.coordinates[0];
-        const lng = event.place.location.coordinates[1];
-
-        const urlImage = isValidUrl(event.place.featuredImageUrl)
-          ? event.place.featuredImageUrl
-          : "/placeholder.jpg";
-
-        const popupContent = `
-          <div class="flex flex-col items-center p-1">
-            <div class="relative w-[50px] h-[50px] bg-gray-100 rounded-md overflow-hidden">
-              <img 
-                src="${urlImage}" 
-                class="w-full h-full object-cover transition-opacity duration-300"
-                onerror="this.classList.add('opacity-0')"
-              />
-            </div>
-          </div>
-        `;
-
-        return L.marker([lat, lng], { icon: CustomMarker("black") })
-          .addTo(newMap)
-          .bindPopup(popupContent, {
-            closeOnClick: false,
-            autoClose: false,
-            closeButton: false,
-          })
-          .openPopup();
+      //Add markers
+      markers.map((marker) => {
+        marker.addTo(newMap).openPopup();
       });
 
       // Clean up function
       return () => {
         if (mapRef.current) {
-          markers.forEach((marker) => marker.remove());
-          userMarker.remove();
+          // markers.forEach((marker) => marker.remove());
+          // userMarker.remove();
           mapRef.current.remove();
           mapRef.current = null;
         }

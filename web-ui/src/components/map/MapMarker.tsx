@@ -17,4 +17,21 @@ const CustomMarker = (color: string) => {
   });
 };
 
-export default CustomMarker;
+const MapMarker = (
+  coordinates: [number, number],
+  color: string,
+  popupContent: string,
+  className?: string
+) => {
+  return L.marker(coordinates, {
+    icon: CustomMarker(color),
+  }).bindPopup(popupContent, {
+    className: className,
+    closeOnClick: false,
+    autoClose: false,
+    closeButton: false,
+    autoPan: false,
+  });
+};
+
+export default MapMarker;

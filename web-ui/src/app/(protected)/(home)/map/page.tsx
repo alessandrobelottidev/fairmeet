@@ -5,10 +5,10 @@ import BottomSheet from "@/components/bottomsheet/BottomSheet";
 import { useRef, useEffect, useState } from "react";
 import fetchRecommendations from "@/lib/event-fetch";
 import { ScoredPlace } from "@fairmeet/rest-api";
-import { Map as LeafletMap } from "leaflet";
+import L, { Map as LeafletMap } from "leaflet";
 import { useGeolocation } from "@/context/geolocation-context";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { isValidUrl } from "@/lib/url";
+import MapMarker from "@/components/map/MapMarker";
 
 export default function MapPage() {
   let { coordinates, error, permissionStatus, requestPermission, isTracking } =
@@ -29,6 +29,7 @@ export default function MapPage() {
   }, [coordinates]);
 
   const handlePinClick = () => {
+    requestPermission();
     if (mapRef.current) {
       mapRef.current.setView([coordinates[0], coordinates[1]], 15, {
         animate: true,
@@ -37,20 +38,39 @@ export default function MapPage() {
     }
   };
 
-  // Show permission request if not tracking
-  if (permissionStatus === "prompt" && !isTracking) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full p-4">
-        <Alert className="mb-4">
-          <AlertDescription>
-            To provide you with location-based recommendations, we need access
-            to your location.
-          </AlertDescription>
-        </Alert>
-        <Button onClick={requestPermission}>Share Location</Button>
+  // User marker
+  const userMarker = MapMarker(
+    coordinates,
+    "green",
+    "@you",
+    "bg-white rounded-lg shadow-lg overflow-hidden"
+  );
+
+  // Events and spots markers
+  const eventMarkers = recommendations.map((event) => {
+    const lat = event.place.location.coordinates[0];
+    const lng = event.place.location.coordinates[1];
+
+    const urlImage = isValidUrl(event.place.featuredImageUrl)
+      ? event.place.featuredImageUrl
+      : "/placeholder.jpg";
+
+    const popupContent = `
+      <div class="flex flex-col items-center p-1">
+        <div class="relative w-[50px] h-[50px] bg-gray-100 rounded-md overflow-hidden">
+          <img
+            src="${urlImage}"
+            class="w-full h-full object-cover transition-opacity duration-300"
+            onerror="this.classList.add('opacity-0')"
+          />
+        </div>
       </div>
-    );
-  }
+    `;
+
+    return MapMarker([lat, lng], "black", popupContent);
+  });
+
+  const markers = [userMarker, ...eventMarkers];
 
   return (
     <>
@@ -58,7 +78,9 @@ export default function MapPage() {
         coordinates={coordinates}
         recommendations={recommendations}
         mapRef={mapRef}
+        markers={markers}
       />
+
       <div className="sm:relative">
         <PinLocation onPinClick={handlePinClick} />
       </div>
