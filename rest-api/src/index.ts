@@ -24,3 +24,5 @@ export type { ScoredPlace, RecommendationOptions } from '@core/services/recom-en
 
 export type { IUser } from '@features/auth/types/user';
 export type { Role } from '@features/auth/types/role';
+
+export type { IMeeting } from '@features/meetings/types/meeting.interface';
