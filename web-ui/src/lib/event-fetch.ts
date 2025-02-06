@@ -31,8 +31,6 @@ const fetchRecommendations = async (
     },
   };
 
-  console.log(data);
-
   try {
     const response = await fetch("http://localhost:3001/v1/recommend", {
       method: "POST",
