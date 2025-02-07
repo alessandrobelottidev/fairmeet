@@ -32,6 +32,11 @@ export const getSpotById: RequestHandler[] = [
     preQuery: async (query, req) => {
       query.where('_id').equals(req.params.id).limit(1);
     },
+    postQuery: async (spots) => {
+      const spot = spots[0];
+      if (!spot) return null;
+      return spot;
+    },
   }),
 ];
 

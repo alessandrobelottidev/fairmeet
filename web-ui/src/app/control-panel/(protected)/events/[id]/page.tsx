@@ -1,6 +1,7 @@
 import { authFetch } from "@/lib/fetch";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Event {
   _id: string;
@@ -47,7 +48,7 @@ export default async function EventPage({ params }: PageProps) {
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {event.featuredImageUrl && (
           <div className="h-64 overflow-hidden">
-            <img
+            <Image
               src={event.featuredImageUrl}
               alt={event.title}
               className="w-full object-cover"

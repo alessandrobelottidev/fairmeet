@@ -180,6 +180,23 @@ const deleteMessage: RequestHandler = async (req, res, next) => {
   }
 };
 
+const hasUpdates: RequestHandler = async (req, res, next) => {
+  try {
+    const { group_id } = req.params;
+    const since = parseInt(req.query.since as string);
+
+    // Check for messages newer than the given timestamp
+    const newerMessages = await MessageModel.findOne({
+      group: new mongoose.Types.ObjectId(group_id),
+      createdAt: { $gt: new Date(since) },
+    });
+
+    res.status(200).json({ hasUpdates: !!newerMessages });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getGroupDetails,
   deleteGroup,
@@ -191,4 +208,5 @@ export default {
   deleteMessage,
   createGroup,
   fetchUserGroups,
+  hasUpdates,
 };

@@ -15,7 +15,7 @@ export default async function ControlPanelHomePage() {
           : "Government Entity"}
       </p>
       <p className="text-gray-600">
-        From here you can manage your organization's presence on FairMeet.
+        From here you can manage your organization&apos;s presence on FairMeet.
       </p>
     </div>
   );

@@ -1,10 +1,12 @@
 {
-  "name": "rest-api",
+  "name": "@fairmeet/rest-api",
   "version": "1.0.0",
   "description": "REST API service for Fairmeet backend",
   "type": "module",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsx watch ./src/index.ts",
+    "build": "tsc",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
     "clean": "rimraf dist"

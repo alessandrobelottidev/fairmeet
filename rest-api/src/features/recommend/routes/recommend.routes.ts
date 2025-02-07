@@ -1,3 +1,4 @@
+import { validateRecommendSchema } from '../middleware/recommend.middleware';
 import controller from '@features/recommend/controllers/recommend.controllers';
 import e from 'express';
 
@@ -20,7 +21,6 @@ const router = e.Router();
  *             required:
  *               - coordinates
  *               - groupSize
- *               - timeOfDay
  *               - preferences
  *             properties:
  *               coordinates:
@@ -38,11 +38,6 @@ const router = e.Router();
  *                 minimum: 1
  *                 description: Number of people in the group
  *                 example: 3
- *               timeOfDay:
- *                 type: string
- *                 enum: [morning, afternoon, evening, night]
- *                 description: Time of day for the recommendation
- *                 example: "afternoon"
  *               preferences:
  *                 type: object
  *                 required:
@@ -133,6 +128,6 @@ const router = e.Router();
  *       500:
  *         description: Internal server error
  */
-router.route('/').get(controller.getRecommendationsByUsersCoordinates);
+router.route('/').post(validateRecommendSchema, controller.getRecommendationsByUsersCoordinates);
 
 export default router;

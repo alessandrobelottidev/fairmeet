@@ -26,38 +26,33 @@ function calculateCentroid(coordinates: number[][]) {
   const hyp = Math.sqrt(x * x + y * y); // Hypotenuse
   const lat = Math.atan2(z, hyp) * (180 / Math.PI); // Convert back to degrees
 
-  return [lon, lat];
+  return [lat, lon];
 }
 
 export const getRecommendationsByUsersCoordinates: RequestHandler = async (req, res, next) => {
   const list_coordinates = req.body.coordinates;
-  const radius = req.body.preferences.maxDistance * 1000; //conversion km to m
+  const radius = 10000;
 
   //Least distant common point
   const [latitude, longitude] = calculateCentroid(list_coordinates);
 
   //Get the list of all places in IPlaces format
   const result1 = await getPlacesByCoordinates(latitude, longitude, radius);
-
   //Set a variable with RecommendationOptions vlaue for the next function
   const data: RecommendationOptions = {
     currentTime: new Date(),
     originCoordinates: [latitude, longitude],
     groupSize: req.body.groupSize,
-    timeOfDay: req.body.timeOfDay,
     preferences: {
-      maxDistance: req.body.preferences.maxDistance, // in kilometers
+      maxDistance: radius, // in kilometers CHANGE this to the preferences of the user
       preferIndoor: req.body.preferences.preferIndoor,
       preferOutdoor: req.body.preferences.preferOutdoor,
       activityType: req.body.preferences.activityType,
     },
   };
 
-  // console.log(data);
-
   const service = new PlaceRecommendationService();
   const result2: ScoredPlace[] = await service.getRecommendations(result1, data);
-
   res.status(200).json(result2);
 };
 
