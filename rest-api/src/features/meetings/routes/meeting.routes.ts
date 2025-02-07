@@ -72,14 +72,22 @@ const router = express.Router();
  *       403:
  *         description: Not authorized
  *   get:
- *     summary: List all meetings (admin only)
+ *     summary: List meetings based on user role (admin or non-admin)
  *     tags:
  *       - Meetings | FEATURE
  *     security:
  *       - bearerAuth: []
+ *     description: |
+ *       Returns meetings based on user's role:
+ *       - Admin users see all meetings in the system
+ *       - Regular users see meetings where they are either:
+ *         1. The creator of the meeting
+ *         2. A member of the group the meeting belongs to
  *     responses:
  *       200:
- *         description: List of all meetings
+ *         description: List of meetings
+ *       401:
+ *         description: Not authenticated
  *       403:
  *         description: Not authorized
  */
@@ -91,7 +99,13 @@ router
     requireGroupMembershipOrAdmin,
     meetingController.createMeeting,
   )
-  .get(requireAuthentication, requireAdminRole, meetingController.listMeetings);
+  .get(requireAuthentication, (req, res, next) => {
+    const { role } = req.body.user;
+    if (role === 'admin') {
+      return meetingController.listMeetings(req, res, next);
+    }
+    return meetingController.listAccessibleMeetings(req, res, next);
+  });
 
 /**
  * @swagger

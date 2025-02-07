@@ -1,5 +1,6 @@
 import { IMeeting } from '../types/meeting.interface';
 import { CustomError } from '@core/middlewares/errors/custom.error';
+import GroupModel from '@features/groups/models/group';
 import MeetingModel from '@features/meetings/models/meeting.model';
 import { RequestHandler } from 'express';
 import mongoose from 'mongoose';
@@ -44,6 +45,37 @@ const listMeetings: RequestHandler = async (req, res, next) => {
     if (group_id) {
       query = { group: new mongoose.Types.ObjectId(group_id as string) };
     }
+
+    const meetings = await MeetingModel.find(query)
+      .populate('creator')
+      .populate('group')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(meetings);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const listAccessibleMeetings: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(String(req.body.user.id));
+
+    // Get all groups where user is a member
+    const userGroups = await GroupModel.find({
+      $or: [{ members: userId }, { createdBy: userId }],
+    }).select('_id');
+
+    console.log(userGroups);
+
+    const groupIds = userGroups.map((group) => group._id);
+
+    // User should see meetings where they are either:
+    // 1. The creator of the meeting OR
+    // 2. A member of the group the meeting belongs to
+    const query = {
+      $or: [{ creator: userId }, { group: { $in: groupIds } }],
+    };
 
     const meetings = await MeetingModel.find(query)
       .populate('creator')
@@ -163,6 +195,7 @@ export default {
   createMeeting,
   getMeetingDetails,
   listMeetings,
+  listAccessibleMeetings,
   deleteMeeting,
   addVote,
   removeVote,

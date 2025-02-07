@@ -216,8 +216,6 @@ export async function resetPassword(formData: FormData) {
     }),
   });
 
-  console.log(response);
-
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || "Password reset failed");
