@@ -13,11 +13,13 @@ import { clientFetch } from "@/lib/client-fetch";
 export interface IMeeting {
   _id: string;
   group: IGroup;
-  creator: string;
-  places: Array<{
-    placeId: string;
-    placeType: "spot" | "event";
-  }>;
+  creator: string & { handle: string };
+  places:
+    | Array<{
+        placeId: string;
+        placeType: "spot" | "event";
+      }>
+    | Array<IPlace>;
   votes: Array<Vote>;
   chosenPlace?: {
     placeId: string;

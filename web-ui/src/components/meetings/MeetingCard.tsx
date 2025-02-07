@@ -4,35 +4,11 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp, Users, Crown } from "lucide-react";
 import StaticMap from "./StaticMap";
 import { PlacesList } from "./PlacesList";
-import { useMeetings } from "@/context/meetings-context";
+import { IMeeting, IPlace, useMeetings } from "@/context/meetings-context";
+import { IGroup } from "@fairmeet/rest-api";
 
 interface MeetingCardProps {
-  meeting: {
-    _id: string;
-    creator: { handle: string };
-    group: {
-      name: string;
-      members: string[];
-      createdBy: string;
-    };
-    radius: {
-      center: {
-        type: "Point";
-        coordinates: [number, number];
-      };
-      sizeInMeters: number;
-    };
-    chosenPlace?: {
-      placeId: string;
-      placeType: "spot" | "event";
-    };
-    places: Array<any>;
-    votes: Array<{
-      userId: string;
-      selectedPlaces: string[];
-      createdAt: Date;
-    }>;
-  };
+  meeting: IMeeting & { group: IGroup; places: IPlace[] };
 }
 
 export function MeetingCard({ meeting }: MeetingCardProps) {
