@@ -63,8 +63,10 @@ const listAccessibleMeetings: RequestHandler = async (req, res, next) => {
 
     // Get all groups where user is a member
     const userGroups = await GroupModel.find({
-      members: userId,
+      $or: [{ members: userId }, { createdBy: userId }],
     }).select('_id');
+
+    console.log(userGroups);
 
     const groupIds = userGroups.map((group) => group._id);
 

@@ -10,7 +10,11 @@ export default async function MeetingsPage() {
   const initialMeetings = await authFetch<IMeeting[]>("/v1/meetings");
 
   return (
-    <MeetingsProvider initialMeetings={initialMeetings} userId={user.id}>
+    <MeetingsProvider
+      initialMeetings={initialMeetings}
+      userId={user.id}
+      userHandle={user.handle}
+    >
       <MeetingsView />
     </MeetingsProvider>
   );

@@ -9,7 +9,7 @@ import { useMeetings } from "@/context/meetings-context";
 interface MeetingCardProps {
   meeting: {
     _id: string;
-    creator: string;
+    creator: { handle: string };
     group: {
       name: string;
       members: string[];
@@ -36,10 +36,13 @@ interface MeetingCardProps {
 }
 
 export function MeetingCard({ meeting }: MeetingCardProps) {
-  const { userId, finalizeMeeting } = useMeetings();
+  const { userHandle, finalizeMeeting } = useMeetings();
   const [isExpanded, setIsExpanded] = useState(true);
 
-  const isCreator = userId === meeting.creator;
+  const isCreator = userHandle === meeting.creator.handle;
+  console.log("User handle:", userHandle);
+  console.log("Meeting creator:", meeting.creator.handle);
+  console.log("IS CREATOR?", isCreator);
   const isMeetingFinalized = !!meeting.chosenPlace;
 
   return (
@@ -107,10 +110,13 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
                 const mostVoted = placeVotes.reduce((prev, current) =>
                   current.voteCount > prev.voteCount ? current : prev
                 );
+
+                console.log("Most voted:", mostVoted);
+
                 finalizeMeeting(
                   meeting._id,
                   mostVoted.place._id,
-                  mostVoted.place.placeType
+                  mostVoted.place.startDateTimeZ ? "event" : "spot"
                 );
               }}
               className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg

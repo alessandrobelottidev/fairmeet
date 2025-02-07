@@ -84,6 +84,7 @@ interface MeetingsContextType {
     meetingId: string
   ) => (IMeeting & { group: IGroup; places: IPlace[] }) | undefined;
   userId: string;
+  userHandle: string;
 }
 
 const MeetingsContext = createContext<MeetingsContextType | undefined>(
@@ -94,10 +95,12 @@ export function MeetingsProvider({
   children,
   initialMeetings,
   userId,
+  userHandle,
 }: {
   children: ReactNode;
   initialMeetings: IMeeting[];
   userId: string;
+  userHandle: string;
 }) {
   const [meetings, setMeetings] = useState<Array<any>>(initialMeetings);
   const [isLoading, setIsLoading] = useState(false);
@@ -267,6 +270,7 @@ export function MeetingsProvider({
         getVoteStatsForPlace,
         getMeetingById,
         userId,
+        userHandle,
       }}
     >
       {children}
