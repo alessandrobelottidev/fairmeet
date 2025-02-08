@@ -234,7 +234,6 @@ export const MeetUpProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         newSelection.add(event);
       }
-      console.log(newSelection);
       return newSelection;
     });
   };

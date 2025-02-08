@@ -16,9 +16,6 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const isCreator = userHandle === meeting.creator.handle;
-  console.log("User handle:", userHandle);
-  console.log("Meeting creator:", meeting.creator.handle);
-  console.log("IS CREATOR?", isCreator);
   const isMeetingFinalized = !!meeting.chosenPlace;
 
   return (
@@ -86,8 +83,6 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
                 const mostVoted = placeVotes.reduce((prev, current) =>
                   current.voteCount > prev.voteCount ? current : prev
                 );
-
-                console.log("Most voted:", mostVoted);
 
                 finalizeMeeting(
                   meeting._id,
