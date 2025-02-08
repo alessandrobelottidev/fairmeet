@@ -15,7 +15,16 @@ export default async function MeetingsPage() {
       userId={user.id}
       userHandle={user.handle}
     >
-      <MeetingsView />
+      <div className="p-4">
+        <h1 className="text-lg font-semibold mb-1">Ritrovi</h1>
+        <p className="text-sm">
+          Da qui puoi visualizzare ed interagire con i ritrovi creati da te o
+          dai membri dei vari gruppi di cui fai parte.
+        </p>
+      </div>
+      <div className="h-full max-h-[calc(_100vh_-_174px_)] overflow-y-scroll pt-2 pb-5">
+        <MeetingsView />
+      </div>
     </MeetingsProvider>
   );
 }
