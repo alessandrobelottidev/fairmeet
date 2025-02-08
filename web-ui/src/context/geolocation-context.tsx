@@ -9,7 +9,7 @@ import {
 type Coordinates = [number, number];
 
 interface GeolocationContextType {
-  coordinates: Coordinates;
+  userCoordinates: Coordinates;
   error: string | null;
   permissionStatus: PermissionState;
   isTracking: boolean;
@@ -21,7 +21,7 @@ interface GeolocationContextType {
 const GeolocationContext = createContext<GeolocationContextType | null>(null);
 
 export function GeolocationProvider({ children }: { children: ReactNode }) {
-  const [coordinates, setCoordinates] = useState<Coordinates>([
+  const [userCoordinates, setCoordinates] = useState<Coordinates>([
     46.068548, 11.123382,
   ]);
   const [error, setError] = useState<string | null>(null);
@@ -133,7 +133,7 @@ export function GeolocationProvider({ children }: { children: ReactNode }) {
   return (
     <GeolocationContext.Provider
       value={{
-        coordinates,
+        userCoordinates,
         error,
         permissionStatus,
         isTracking: watchId !== null,
