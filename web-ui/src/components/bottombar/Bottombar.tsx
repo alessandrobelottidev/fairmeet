@@ -1,14 +1,19 @@
 "use client";
 
 import NavButton from "./NavButton";
-import { UserCircle2, Map, MessageSquare } from "lucide-react";
+import { UserCircle2, Map, MessageSquare, LandPlot } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const tabs = [
   {
-    label: "Ritrovi",
+    label: "Profilo",
     icon: UserCircle2,
+    goTo: "/profile",
+  },
+  {
+    label: "Ritrovi",
+    icon: LandPlot,
     goTo: "/meetup",
   },
   {
