@@ -6,16 +6,16 @@ import { IGroup } from "@fairmeet/rest-api";
 import { getCurrentUser, User } from "@/lib/auth";
 import { clientFetch } from "@/lib/client-fetch";
 import ContinueButton from "@/components/meetup-creation/ContinueButton";
+import { Friend } from "@/context/meetup-creation-context";
 
 export default function GroupSelectionStep() {
   const { setCurrentStep, updateMeetupData, meetupData } = useMeetupCreation();
   const [groups, setGroups] = useState<IGroup[] | null>(null);
-  const [user, setUser] = useState<User | null>(null);
 
   const fetchData = async () => {
     try {
       const userData = await getCurrentUser();
-      setUser(userData);
+      updateMeetupData({ user: userData ?? undefined });
 
       if (userData) {
         const userId = userData.id;
@@ -30,8 +30,7 @@ export default function GroupSelectionStep() {
         setGroups(groups);
       }
     } catch (error) {
-      console.error("Error fetching user:", error);
-      setUser(null);
+      console.error("Error fetching user or groups:", error);
     }
   };
 
@@ -44,16 +43,27 @@ export default function GroupSelectionStep() {
   }, [setCurrentStep]);
 
   return (
-    <div className="p-10">
+    <div className="p-6 h-full">
       <h1 className="text-2xl font-bold text-center">
         Scegli per quale gruppo creare il ritrovo
       </h1>
-      <form className="space-y-4 mt-4">
+      <form className="space-y-4 mt-4 mb-4">
         <div className="rounded-full border-2 overflow-clip">
           <select
             value={meetupData.groupId}
-            onChange={(e) => updateMeetupData({ groupId: e.target.value })}
-            className="block w-full bg-white p-3 border-r-8 border-r-transparent focus:outline-none"
+            onChange={(e) =>
+              updateMeetupData({
+                groupId: e.target.value,
+                group: groups?.find((el) => el._id === e.target.value),
+                friends: (
+                  groups?.find((el) => el._id === e.target.value)
+                    ?.members as User[]
+                )?.map((u) => ({
+                  user: u,
+                })),
+              })
+            }
+            className="block w-full bg-white px-3 py-2 border-r-8 border-r-transparent focus:outline-none"
           >
             <option key={-1} value="">
               Seleziona un gruppo

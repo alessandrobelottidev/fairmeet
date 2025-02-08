@@ -1,9 +1,23 @@
 "use client";
 
+import { User } from "@/lib/auth";
+import { IGroup } from "@fairmeet/rest-api";
 import { createContext, useContext, ReactNode, useState } from "react";
+
+export interface Friend {
+  user: User;
+  lat?: Number;
+  long?: Number;
+}
 
 export interface MeetupData {
   groupId: string;
+  group?: IGroup;
+  user?: User;
+  friends?: Friend[];
+  userPositionToChange?: User;
+
+  /// CLAUDE SUGGESTIONS
   title?: string;
   description?: string;
   date?: string;
@@ -41,8 +55,12 @@ const MeetupCreationContext = createContext<MeetupCreationState | undefined>(
 
 const INITIAL_MEETUP_DATA: MeetupData = {
   groupId: "",
+  user: undefined,
+  group: undefined,
+  friends: undefined,
+  userPositionToChange: undefined,
 
-  /// CLAUDE SUGGESTION
+  /// CLAUDE SUGGESTIONS
   title: "",
   description: "",
   date: "",
@@ -89,16 +107,25 @@ export function MeetupCreationProvider({ children }: { children: ReactNode }) {
   const isStepComplete = (step: number): boolean => {
     switch (step) {
       case 1:
-        return Boolean(meetupData.groupId && meetupData.groupId !== "");
-      case 2: // Location
         return Boolean(
-          meetupData.location?.address && meetupData.location?.city
+          meetupData.groupId &&
+            meetupData.groupId !== "" &&
+            meetupData.user &&
+            meetupData.group &&
+            meetupData.friends
         );
-      case 3: // Details
+      case 2:
+        if (!meetupData.friends || meetupData.friends.length === 0) {
+          return false;
+        }
+
+        // Check that all friends have valid lat and long
+        return meetupData.friends.every((friend) => friend.lat && friend.long);
+      case 3:
         return Boolean(
           meetupData.attendeeLimit && meetupData.categories?.length
         );
-      case 4: // Review
+      case 4:
         return isStepComplete(1) && isStepComplete(2) && isStepComplete(3);
       default:
         return false;

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fairmeet/rest-api": "1.0.0",
+    "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-toast": "^1.2.6",
     "@types/js-cookie": "^3.0.6",
     "class-variance-authority": "^0.7.1",

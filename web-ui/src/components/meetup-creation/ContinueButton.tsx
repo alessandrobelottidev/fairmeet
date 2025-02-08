@@ -1,6 +1,7 @@
 "use client";
 
 import { useMeetupCreation } from "@/context/meetup-creation-context";
+import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -22,13 +23,19 @@ export default function ContinueButton({ callBack, children }: Props) {
       router.push(steps[currentStep].path);
       setCurrentStep(currentStep + 1);
     } else {
-      console.log("NOT READY BOYYYY");
+      toast({
+        title: "Errore",
+        description: "Alcuni campi sono vuoti",
+        variant: "destructive",
+        duration: 3000,
+      });
     }
   }
 
   return (
     <div>
       <button
+        className="bg-black px-4 py-2 text-white rounded-full w-full font-semibold"
         onClick={async () => {
           if (callBack) {
             await callBack();
