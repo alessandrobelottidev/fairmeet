@@ -1,4 +1,3 @@
-// layout.tsx
 import { Bottombar } from "@/components/bottombar/Bottombar";
 import type { ReactNode } from "react";
 import { ClientProviders } from "@/components/providers/ClientProviders";
