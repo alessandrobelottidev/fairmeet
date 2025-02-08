@@ -23,9 +23,11 @@ export function MeetingsView() {
   }
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-4 px-4">
       {meetings.map((meeting) => (
-        <MeetingCard key={meeting._id} meeting={meeting} />
+        <>
+          <MeetingCard key={meeting._id} meeting={meeting} />
+        </>
       ))}
     </div>
   );
