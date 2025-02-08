@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 interface ButtonProps {
   title: string;
   href: string;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "danger";
   className?: string;
 }
 
@@ -26,6 +26,10 @@ const Button = ({
     secondary: {
       container: "bg-neutral-700 text-white hover:bg-neutral-800",
       arrowBg: "bg-neutral-800",
+    },
+    danger: {
+      container: "bg-red-600 text-white hover:bg-red-700",
+      arrowBg: "bg-red-700",
     },
   };
 
