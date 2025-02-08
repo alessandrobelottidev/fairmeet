@@ -1,5 +1,5 @@
 "use client";
-import Map from "@/components/map/Map";
+import MapComponent from "@/components/map/Map";
 import PinLocation from "@/components/map/PinLocation";
 import BottomSheet from "@/components/bottomsheet/BottomSheet";
 import { useRef, useEffect, useState } from "react";
@@ -11,14 +11,20 @@ import { isValidUrl } from "@/lib/url";
 import MapMarker from "@/components/map/MapMarker";
 
 export default function MapPage() {
-  let { coordinates, error, permissionStatus, requestPermission, isTracking } =
-    useGeolocation();
+  let {
+    userCoordinates,
+    error,
+    permissionStatus,
+    requestPermission,
+    isTracking,
+  } = useGeolocation();
   const [recommendations, setRecommendations] = useState<ScoredPlace[]>([]);
   const mapRef = useRef<LeafletMap | null>(null);
+  const [viewCoordinates, setViewCoordinates] = useState(userCoordinates);
 
   useEffect(() => {
     const getRecommendations = async () => {
-      const { data, error } = await fetchRecommendations([coordinates]);
+      const { data, error } = await fetchRecommendations([viewCoordinates]);
       if (error) {
         console.log(error);
         return;
@@ -26,12 +32,16 @@ export default function MapPage() {
       setRecommendations(data);
     };
     getRecommendations();
-  }, [coordinates]);
+  }, [viewCoordinates]);
+
+  const updateViewCoordinates = (coordinates: [number, number]) => {
+    setViewCoordinates(coordinates);
+  };
 
   const handlePinClick = () => {
     requestPermission();
     if (mapRef.current) {
-      mapRef.current.setView([coordinates[0], coordinates[1]], 15, {
+      mapRef.current.setView([userCoordinates[0], userCoordinates[1]], 15, {
         animate: true,
         duration: 1,
       });
@@ -40,7 +50,7 @@ export default function MapPage() {
 
   // User marker
   const userMarker = MapMarker(
-    coordinates,
+    userCoordinates,
     "green",
     "@you",
     "bg-white rounded-lg shadow-lg overflow-hidden"
@@ -74,11 +84,11 @@ export default function MapPage() {
 
   return (
     <>
-      <Map
-        coordinates={coordinates}
-        recommendations={recommendations}
+      <MapComponent
+        userCoordinates={userCoordinates}
         mapRef={mapRef}
         markers={markers}
+        updateView={updateViewCoordinates}
       />
 
       <div className="sm:relative">
