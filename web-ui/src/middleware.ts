@@ -116,7 +116,7 @@ export async function middleware(request: NextRequest) {
   // Check role access
   if (!config.allowedRoles.includes(user.role as UserRole)) {
     // Redirect to appropriate section based on role
-    const correctPath = user.role === "basic" ? "/" : "/control-panel";
+    const correctPath = user.role === "basic" ? "/map" : "/control-panel";
     const response = NextResponse.redirect(new URL(correctPath, request.url));
 
     // If we have a new token, set it in the response

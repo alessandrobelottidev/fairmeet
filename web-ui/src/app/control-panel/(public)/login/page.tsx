@@ -9,7 +9,7 @@ export default async function ControlPanelLoginPage() {
   // If user is already authenticated, redirect to appropriate page
   const user = await getCurrentUser();
   if (user) {
-    redirect(user.role === "basic" ? "/" : "/control-panel");
+    redirect(user.role === "basic" ? "/map" : "/control-panel");
   }
 
   return (

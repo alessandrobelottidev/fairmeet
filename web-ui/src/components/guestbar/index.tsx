@@ -6,7 +6,7 @@ const GuestBanner = () => {
   const router = useRouter();
 
   const handleRegistration = () => {
-    router.push("/");
+    router.push("/register");
   };
 
   return (
