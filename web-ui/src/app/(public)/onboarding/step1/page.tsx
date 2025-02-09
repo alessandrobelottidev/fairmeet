@@ -38,6 +38,7 @@ export default function StepFour() {
         <div className="h-1 w-full rounded-full bg-gray-300" />
         <div className="h-1 w-full rounded-full bg-gray-300" />
         <div className="h-1 w-full rounded-full bg-gray-300" />
+        <div className="h-1 w-full rounded-full bg-gray-300" />
       </div>
     </>
   );

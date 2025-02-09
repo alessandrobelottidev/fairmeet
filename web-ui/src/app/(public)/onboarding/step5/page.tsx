@@ -2,14 +2,14 @@
 import ImageContainer from "@/components/image-container";
 import NextButton from "@/components/ui/next-button";
 
-export default function StepFour() {
+export default function StepFive() {
   return (
     <>
-      <h2 className="text-2xl font-bold mb-8">VISUALIZZA INCONTRI</h2>
-      <ImageContainer url={"/onboarding/meetup-viz.svg"} />
+      <h2 className="text-2xl font-bold mb-2">CREA INCONTRI</h2>
+      <ImageContainer url={"/onboarding/meetup-creation.png"} />
       <div className="flex flex-col mt-auto gap-8">
         <NextButton
-          link={"/onboarding/step5"}
+          link={"/map"}
           className="bg-green-500 rounded-full ml-auto"
         />
         <div className="flex flex-col mt-auto gap-8">
@@ -17,8 +17,8 @@ export default function StepFour() {
             <div className="h-1 w-full rounded-full bg-gray-300" />
             <div className="h-1 w-full rounded-full bg-gray-300" />
             <div className="h-1 w-full rounded-full bg-gray-300" />
-            <div className="h-1 w-full rounded-full bg-black" />
             <div className="h-1 w-full rounded-full bg-gray-300" />
+            <div className="h-1 w-full rounded-full bg-black" />
           </div>
         </div>
       </div>
