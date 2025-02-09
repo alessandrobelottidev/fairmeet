@@ -5,7 +5,9 @@ import ImageContainer from "@/components/image-container";
 export default function StepTwo() {
   return (
     <>
-      <h2 className="text-2xl font-bold mb-8">MAPPA</h2>
+      {/* <div className="flex items-center self-center"> */}
+      <h2 className="text-2xl font-bold m-2 self-center">MAPPA</h2>
+      {/* </div> */}
       <ImageContainer url={"/onboarding/mappa.svg"} />
       <div className="flex flex-col mt-auto gap-8">
         <NextButton

@@ -5,7 +5,7 @@ import NextButton from "@/components/ui/next-button";
 export default function StepThree() {
   return (
     <>
-      <h2 className="text-2xl font-bold mb-8">CHAT</h2>
+      <h2 className="text-2xl font-bold m-2 self-center">CHAT</h2>
       <ImageContainer url={"/onboarding/chat.svg"} />
       <div className="flex flex-col mt-auto gap-8">
         <NextButton

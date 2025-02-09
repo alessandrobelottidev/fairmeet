@@ -5,7 +5,9 @@ import NextButton from "@/components/ui/next-button";
 export default function StepFour() {
   return (
     <>
-      <h2 className="text-2xl font-bold mb-8">VISUALIZZA INCONTRI</h2>
+      <h2 className="text-2xl font-bold m-2 self-center">
+        VISUALIZZA INCONTRI
+      </h2>
       <ImageContainer url={"/onboarding/meetup-viz.svg"} />
       <div className="flex flex-col mt-auto gap-8">
         <NextButton

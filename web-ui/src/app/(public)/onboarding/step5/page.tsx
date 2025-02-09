@@ -5,7 +5,7 @@ import NextButton from "@/components/ui/next-button";
 export default function StepFive() {
   return (
     <>
-      <h2 className="text-2xl font-bold mb-2">CREA INCONTRI</h2>
+      <h2 className="text-2xl font-bold m-2 self-center">CREA INCONTRI</h2>
       <ImageContainer url={"/onboarding/meetup-creation.png"} />
       <div className="flex flex-col mt-auto gap-8">
         <NextButton
