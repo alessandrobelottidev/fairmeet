@@ -2,6 +2,7 @@
 
 import { User } from "@/lib/auth";
 import { IGroup } from "@fairmeet/rest-api";
+import { ScoredPlace } from "@fairmeet/rest-api";
 import { createContext, useContext, ReactNode, useState } from "react";
 
 export interface Friend {
@@ -10,30 +11,23 @@ export interface Friend {
   long?: Number;
 }
 
+export interface MeetingPlace {
+  placeId: string;
+  placeType: "spot" | "event";
+}
+
 export interface MeetupData {
   groupId: string;
   group?: IGroup;
   user?: User;
   friends?: Friend[];
   userPositionToChange?: User;
-
-  /// CLAUDE SUGGESTIONS
-  title?: string;
-  description?: string;
-  date?: string;
-  location?: {
-    address?: string;
-    city?: string;
-    coordinates?: {
-      lat: number;
-      lng: number;
-    };
-  };
-  attendeeLimit?: number;
-  categories?: string[];
-  organizer?: {
-    name: string;
-    email: string;
+  recommendedPlaces?: ScoredPlace[];
+  selectedPlaces?: MeetingPlace[];
+  radius?: {
+    lat?: number;
+    long?: number;
+    sizeInMeters?: number;
   };
 }
 
@@ -59,21 +53,9 @@ const INITIAL_MEETUP_DATA: MeetupData = {
   group: undefined,
   friends: undefined,
   userPositionToChange: undefined,
-
-  /// CLAUDE SUGGESTIONS
-  title: "",
-  description: "",
-  date: "",
-  location: {
-    address: "",
-    city: "",
-  },
-  attendeeLimit: 0,
-  categories: [],
-  organizer: {
-    name: "",
-    email: "",
-  },
+  recommendedPlaces: undefined,
+  selectedPlaces: undefined,
+  radius: undefined,
 };
 
 const BASE_URL = "/create-meetup";
@@ -89,7 +71,7 @@ const steps = [
     path: `${BASE_URL}/search-results`,
   },
   {
-    path: `${BASE_URL}/success`,
+    path: `${BASE_URL}/result`,
   },
 ];
 
@@ -123,7 +105,9 @@ export function MeetupCreationProvider({ children }: { children: ReactNode }) {
         return meetupData.friends.every((friend) => friend.lat && friend.long);
       case 3:
         return Boolean(
-          meetupData.attendeeLimit && meetupData.categories?.length
+          meetupData.recommendedPlaces &&
+            meetupData.selectedPlaces &&
+            meetupData.selectedPlaces.length > 0
         );
       case 4:
         return isStepComplete(1) && isStepComplete(2) && isStepComplete(3);

@@ -35,10 +35,10 @@ export default function ParticipantsStep() {
       <div className="space-y-4">
         {meetupData.friends &&
           meetupData.friends.map((friend, i) => (
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-row gap-4" key={i}>
               <div className="flex flex-col flex-1 space-y-1">
                 <p className="text-sm font-medium">Handle amico:</p>
-                <p className="rounded-full border-2 py-1.5 px-3" key={i}>
+                <p className="rounded-full border-2 py-1.5 px-3">
                   @{friend.user.handle}
                 </p>
               </div>
@@ -50,7 +50,6 @@ export default function ParticipantsStep() {
                     updateMeetupData({ userPositionToChange: friend.user });
                     router.push("/create-meetup/participants/map");
                   }}
-                  key={i}
                 >
                   {friend.lat && friend.long
                     ? `${friend.lat}, ${friend.long}`
@@ -61,7 +60,7 @@ export default function ParticipantsStep() {
           ))}
       </div>
 
-      <ContinueButton>CERCA POSTO D'INCONTRO</ContinueButton>
+      <ContinueButton>Cerca posto d'incontro</ContinueButton>
     </div>
   );
 }

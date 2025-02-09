@@ -76,7 +76,7 @@ export default function GroupSelectionStep() {
           </select>
         </div>
       </form>
-      <ContinueButton>CONTINUA</ContinueButton>
+      <ContinueButton>Continua</ContinueButton>
     </div>
   );
 }
