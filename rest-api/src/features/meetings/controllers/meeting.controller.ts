@@ -7,8 +7,6 @@ import mongoose from 'mongoose';
 
 const createMeeting: RequestHandler = async (req, res, next) => {
   try {
-    console.log(req.body);
-
     const meeting = new MeetingModel({
       ...req.body,
       creator: req.body.user.id,
@@ -65,8 +63,6 @@ const listAccessibleMeetings: RequestHandler = async (req, res, next) => {
     const userGroups = await GroupModel.find({
       $or: [{ members: userId }, { createdBy: userId }],
     }).select('_id');
-
-    console.log(userGroups);
 
     const groupIds = userGroups.map((group) => group._id);
 

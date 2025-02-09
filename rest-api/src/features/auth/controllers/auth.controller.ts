@@ -30,7 +30,6 @@ const login: RequestHandler = async (req, res, next) => {
       accessToken,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -59,7 +58,6 @@ const signUp: RequestHandler = async (req, res, next) => {
       accessToken,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -92,7 +90,6 @@ const logout: RequestHandler = async (req, res, next) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -118,7 +115,6 @@ const logoutAllDevices: RequestHandler = async (req, res, next) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -271,7 +267,7 @@ const resetPassword: RequestHandler = async (req, res, next) => {
       resetPasswordToken: resetTokenHash,
       resetPasswordTokenExpiry: { $gt: Date.now() },
     });
-    console.log(user);
+
     if (!user) throw new BadRequestError('The reset link is invalid');
 
     user.password = req.body.password; // Will be hashed by mongoose middleware
@@ -294,7 +290,6 @@ const resetPassword: RequestHandler = async (req, res, next) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -309,7 +304,6 @@ const fetchUserProfile: RequestHandler = async (req, res, next) => {
       user: retrievedUser,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -325,7 +319,6 @@ const fetchAuthUserProfile: RequestHandler = async (req, res, next) => {
       user: dbUser,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -343,7 +336,6 @@ const fetchUserId: RequestHandler = async (req, res, next) => {
 
     res.json({ id: retrievedUser[0]._id, handle: retrievedUser[0].handle });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

@@ -40,8 +40,6 @@ const requireAuthentication: RequestHandler = async (
     next();
   } catch (err: any) {
     // Authentication check didn't go well
-    console.log(err);
-
     if (err.name === 'TokenExpiredError')
       return next(
         new AuthError('Authentication Error', 401, 'Token lifetime exceeded!', {
