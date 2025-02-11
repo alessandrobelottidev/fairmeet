@@ -20,7 +20,6 @@ export const createValidationHandler = (schema: z.ZodSchema): RequestHandler => 
       };
       next();
     } catch (error) {
-      console.error(error);
       next(error);
     }
   };

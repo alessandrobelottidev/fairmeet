@@ -10,7 +10,7 @@ interface IMessage {
 interface IMessageDocument extends IMessage, Document {}
 
 interface IMessageModel extends Model<IMessageDocument> {
-  findByGroup(groupId: Types.ObjectId): Promise<IMessageDocument[]>;
+  findByGroup(groupId: Types.ObjectId, limit: number): Promise<IMessageDocument[]>;
 }
 
 export type { IMessage, IMessageDocument, IMessageModel };

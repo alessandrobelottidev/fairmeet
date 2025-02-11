@@ -137,7 +137,7 @@ export class PlaceRecommendationService {
     const recommendations = this.getRecommendations(places, options);
 
     // Filter out places with very low scores
-    const viablePlaces = recommendations.filter((place) => place.score > 0.4);
+    const viablePlaces = recommendations.filter((place) => place.score > 0);
 
     // If dealing with events, ensure they're ordered by start time
     if (viablePlaces.some((p) => this.isEvent(p.place))) {
