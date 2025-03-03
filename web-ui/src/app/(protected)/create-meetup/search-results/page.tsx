@@ -25,6 +25,8 @@ interface MeetupUserPreferences {
   };
 }
 
+export const dynamic = "force-dynamic";
+
 export default function SearchResultsPage() {
   const {
     setCurrentStep,
