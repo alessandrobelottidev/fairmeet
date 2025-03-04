@@ -2,6 +2,8 @@ import { IMeeting, MeetingsProvider } from "@/context/meetings-context";
 import { MeetingsView } from "@/components/meetings/MeetingView";
 import { getCurrentUser } from "@/lib/auth";
 import { authFetch } from "@/lib/fetch";
+import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 
 export default async function MeetingsPage() {
   const user = await getCurrentUser();
@@ -24,6 +26,12 @@ export default async function MeetingsPage() {
       </div>
       <div className="h-full max-h-[calc(_100vh_-_174px_)] overflow-y-scroll pt-2 pb-5">
         <MeetingsView />
+      </div>
+
+      <div className="absolute bottom-20 right-4 h-12 w-12 text-white bg-green-600 rounded-full flex items-center justify-center">
+        <Link href={"/create-meetup/group-selection"}>
+          <PlusIcon />
+        </Link>
       </div>
     </MeetingsProvider>
   );

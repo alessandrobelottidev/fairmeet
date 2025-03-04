@@ -2,6 +2,7 @@ import Image from "next/image";
 import logoSvg from "../../../public/logo.svg";
 import { LogOutButton } from "./LogOutButton";
 import { Button } from "./Button";
+import Link from "next/link";
 
 export function Sidebar() {
   return (
@@ -14,15 +15,21 @@ export function Sidebar() {
       <div className="flex flex-col justify-between flex-1 w-full">
         <nav className="h-full w-full">
           <Button>
-            <div>Panoramica</div>
+            <Link href={"/control-panel/"}>
+              <div>Panoramica</div>
+            </Link>
           </Button>
 
           <Button>
-            <div>Eventi</div>
+            <Link href={"/control-panel/events"}>
+              <div>Eventi</div>
+            </Link>
           </Button>
 
           <Button>
-            <div>Spot</div>
+            <Link href={"/control-panel/spots"}>
+              <div>Spot</div>
+            </Link>
           </Button>
         </nav>
         <LogOutButton />

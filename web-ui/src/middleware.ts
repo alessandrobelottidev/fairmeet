@@ -15,7 +15,7 @@ const publicPaths = [
 // Define route configs
 const routeConfigs = {
   "/control-panel": {
-    allowedRoles: ["business_owner", "gov_entity"] as UserRole[],
+    allowedRoles: ["business_owner", "gov_entity", "admin"] as UserRole[],
     loginPath: "/control-panel/login",
   },
   "/": {
@@ -116,7 +116,7 @@ export async function middleware(request: NextRequest) {
   // Check role access
   if (!config.allowedRoles.includes(user.role as UserRole)) {
     // Redirect to appropriate section based on role
-    const correctPath = user.role === "basic" ? "/map" : "/control-panel";
+    const correctPath = user.role === "basic" ? "/map" : "/control-panel/";
     const response = NextResponse.redirect(new URL(correctPath, request.url));
 
     // If we have a new token, set it in the response

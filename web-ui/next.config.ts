@@ -3,7 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ["images.unsplash.com", "none.com"], // Should figure out a better way for this. I do not want to host files though.
+    // Should figure out a better way for this. I do not want to host files though.
+    domains: ["images.unsplash.com", "none.com", "www.cultura.trentino.it", "www.italyguide.info", "www.visitdolomites.com", "info.campingmario.com", "www.comune.trento.it"],
   },
   async redirects() {
     return [
